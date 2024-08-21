@@ -1,7 +1,6 @@
 const indexControllers = require('../controllers/index');
 const express = require('express');
 
-const extractToken = require('../utils/middlewares/extractToken');
 const validators = require('../utils/middlewares/validators');
 
 const indexRouter = express.Router();
@@ -10,9 +9,8 @@ indexRouter.get('/', indexControllers.indexGet);
 
 indexRouter.post('/signup', [validators.validateSignUp, indexControllers.signUpPost])
 
-indexRouter.post('/login', extractToken, indexControllers.logInPost);
+indexRouter.post('/login', passport.authenticate('jwt', { session: false }), indexControllers.logInPost);
 
-indexRouter.post('/post', extractToken, indexControllers.postPost);
-
+indexRouter.post('/post', passport.authenticate('jwt', { session: false }), indexControllers.postPost);
 
 module.exports = indexRouter;

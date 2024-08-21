@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-var JwtStrategy = require('passport-jwt').Strategy;
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db/queries');
 
@@ -32,27 +32,21 @@ module.exports = {
             }
         });
     },
-    logInPost: (req, res) => {
-        // Authenticate users
-        var opts = {
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey = 'secret',
-            issuer = 'accounts.examplesoft.com',
-            audience = 'yoursite.net',
-        }
-        // Payload user
-        // MOCK need to integrate passport auth and pass real user
+    logInPost: async (req, res) => {    
+        const { username, password } = req.body;
 
-        const user = {
-            id: 1,
-            username: 'mock',
-            password: 'mock'
-        }
-    
-        jwt.sign({user}, process.env.JWT_SECRET, {expiresIn: '24h'}, (err, token) => {
-            res.json({
-                token
-            })
+        // Verify user login
+        const user  = await db.findUser("username", username);
+        if (!user) return res.status(401).json({
+            message: 'Username not found'
+        });
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) return res.status(401).json({
+            message: 'Invalid password'
+        });
+
+        jwt.sign({id: user.id, username: user.username}, process.env.JWT_SECRET, {expiresIn: '1h'}, (err, token) => {
+            res.json({token})
         })
     },
 

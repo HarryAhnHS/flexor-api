@@ -1,7 +1,6 @@
 const { Strategy, ExtractJwt } = require('passport-jwt');
-const User = require('./models/user'); // Adjust the path to your User model
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwtSecret = process.env.JWT_SECRET;
-
 const db = require("../../db/queries");
 
 module.exports = (passport) => {
@@ -21,4 +20,6 @@ module.exports = (passport) => {
             return done(error, false);
         }
     }));
+
+    // Google stuff here coming soon
 };
