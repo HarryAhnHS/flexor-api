@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+var JwtStrategy = require('passport-jwt').Strategy;
 const jwt = require('jsonwebtoken');
 const db = require('../db/queries');
 
@@ -32,8 +33,16 @@ module.exports = {
         });
     },
     logInPost: (req, res) => {
+        // Authenticate users
+        var opts = {
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey = 'secret',
+            issuer = 'accounts.examplesoft.com',
+            audience = 'yoursite.net',
+        }
         // Payload user
         // MOCK need to integrate passport auth and pass real user
+
         const user = {
             id: 1,
             username: 'mock',

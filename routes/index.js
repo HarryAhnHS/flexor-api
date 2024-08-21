@@ -10,8 +10,9 @@ indexRouter.get('/', indexControllers.indexGet);
 
 indexRouter.post('/signup', [validators.validateSignUp, indexControllers.signUpPost])
 
-indexRouter.post('/login', indexControllers.logInPost);
+indexRouter.post('/login', extractToken, indexControllers.logInPost);
 
 indexRouter.post('/post', extractToken, indexControllers.postPost);
+
 
 module.exports = indexRouter;
