@@ -14,34 +14,68 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  username  String   @unique
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  email     String     @unique
+  username  String     @unique
   password  String
+
   posts     Post[]
+
+  likes     Like[]     @relation("LikedBy")
   comments  Comment[]
+
+  followers Follow[]   @relation("Followers")
+  following Follow[]   @relation("Following")
+}
+
+model Follow {
+  follower    User      @relation("Following", fields: [followerId], references: [id])
+  followerId  String
+
+  following   User      @relation("Followers", fields: [followingId], references: [id])
+  followingId String
+
+  createdAt   DateTime  @default(now())
+
+  @@id([followerId, followingId]) // Composite primary key to ensure uniqueness
 }
 
 model Post {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean
-  title     String
-  content   String
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?
-  comments  Comment[]
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  published   Boolean
+  title       String
+  content     String
+  author      User?      @relation(fields: [authorId], references: [id])
+  authorId    String?
+
+  likes       Like[]     @relation("LikedPost")
+  comments    Comment[]
+}
+
+model Like {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+
+  user        User?      @relation("LikedBy", fields: [userId], references: [id])
+  userId      String?
+
+  post        Post?      @relation("LikedPost", fields: [postId], references: [id])
+  postId      String?
+
+  @@unique([userId, postId]) // This ensures a user can like a post only once
+  @@index([userId])
+  @@index([postId])
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  content   String
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?
-  post      Post?    @relation(fields: [postId], references: [id])
-  postId    String?
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  content     String
+  user        User?      @relation(fields: [userId], references: [id])
+  userId      String?
+  post        Post?      @relation(fields: [postId], references: [id])
+  postId      String?
 }
-

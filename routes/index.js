@@ -8,10 +8,10 @@ const indexRouter = express.Router();
 
 indexRouter.get('/', indexControllers.indexGet);
 
-indexRouter.post('/post', extractToken, indexControllers.postPost);
-
 indexRouter.post('/signup', [validators.validateSignUp, indexControllers.signUpPost])
 
 indexRouter.post('/login', indexControllers.logInPost);
+
+indexRouter.post('/post', extractToken, indexControllers.postPost);
 
 module.exports = indexRouter;
