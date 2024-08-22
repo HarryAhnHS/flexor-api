@@ -97,5 +97,58 @@ module.exports = {
             console.error("Error deleting user", error);
             throw new Error("Error deleting user");
         }
+    },
+    getUserPosts: async (id, published = true) => {
+        try {
+            const isPublished = published; 
+            const user = await prisma.user.findUnique({
+                where: { id },
+                include: {
+                    posts: {
+                        where: {
+                            published: isPublished
+                        }
+                    }
+                }
+            })
+            if (!user) {
+                throw new Error("User not found")
+            }
+            return user.posts;
+        }
+        catch(error) {
+            console.error("Error getting users posts", error);
+            throw new Error("Error getting users posts");
+        }
+    },
+    getUserFollowers: async (id) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id },
+                include: {
+                    followers: true
+                }
+            })
+            return user.followers;
+        }
+        catch(error) {
+            console.error("Error getting user's followers", error);
+            throw new Error("Error getting user's followers");
+        }
+    },
+    getUserFollowing: async (id) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id },
+                include: {
+                    following: true
+                }
+            })
+            return user.following;
+        }
+        catch(error) {
+            console.error("Error getting user's following", error);
+            throw new Error("Error getting user's following");
+        }
     }
 }

@@ -1,10 +1,9 @@
 const usersQueries = require('../queries/usersQueries');
-const userQueries = require('../queries/usersQueries');
 
 module.exports = {
     getUsers: async(req, res) => {
         try {
-            const users = await userQueries.getUsers();
+            const users = await usersQueries.getUsers();
             res.status(201).json({
                 users
             })
@@ -44,13 +43,12 @@ module.exports = {
             if (email) updateData.email = email;
             if (username) updateData.username = username;
             if (password) updateData.password = password; // Password needs hashing
-            if (profilePicture) updateData.profilePicture = profilePicture;
             if (bio) updateData.bio = bio;
     
             const updatedUser = await usersQueries.updateUser(id, updateData);
     
             res.status(201).json({
-                updatedUser
+                user: updatedUser
             })
         }
         catch(error) {
@@ -59,6 +57,9 @@ module.exports = {
             })
         } 
     },
+    // TODO
+    // updateUserProfilePicture: async(req, res) => {
+    // },
     deleteUser: async (req, res) => {
         try {
             const { id } = req.params;
@@ -77,5 +78,62 @@ module.exports = {
                 error: error.message
             })
         }
-    }
+    },
+    getUserPosts: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const posts = await usersQueries.getUserPosts(id);
+            res.status(201).json({
+                posts
+            })
+
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
+    getUserDrafts: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const drafts = await usersQueries.getUserPosts(id, false);
+            res.status(201).json({
+                drafts
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
+    getUserFollowers: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const followers = await usersQueries.getUserFollowers(id);
+            res.status(201).json({
+                followers
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
+    getUserFollowing: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const following = await usersQueries.getUserFollowing(id);
+            res.status(201).json({
+                following
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
 }

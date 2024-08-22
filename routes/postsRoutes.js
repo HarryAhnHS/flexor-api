@@ -2,14 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 // List all posts
-router.get('/posts', (req, res) => {
+router.get('/', (req, res) => {
   // Handle listing posts with optional filters
 });
 
-// Create a new post
-router.post('/posts', (req, res) => {
-  // Handle creating a new post
-});
+/// Create a new post or draft (published or not)
+router.post('/', upload.array('media', 10), usersControllers.createUserPost);
 
 // Get a specific post
 router.get('/posts/:id', (req, res) => {
