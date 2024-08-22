@@ -1,7 +1,7 @@
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwtSecret = process.env.JWT_SECRET;
-const userQueries = require("../../queries/userQueries");
+const userQueries = require("../../queries/usersQueries");
 
 module.exports = (passport) => {
     passport.use(new Strategy({

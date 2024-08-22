@@ -14,10 +14,10 @@ datasource db {
 }
 
 model Session {
-  id          String   @id @default(uuid())
-  sid         String   @unique
-  data        String
-  expiresAt   DateTime
+  id        String   @id @default(uuid())
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 }
 
 model User {
@@ -32,8 +32,12 @@ model User {
   posts          Post[]
   likes          Like[]      @relation("LikedBy")
   comments       Comment[]
+
   followers      Follow[]    @relation("Followers")
   following      Follow[]    @relation("Following")
+
+  joinedRealms   JoinRealm[] @relation("JoiningRealm")
+  createdRealms  Realm[]     @relation("RealmCreatedBy")
 }
 
 model Follow {
@@ -46,25 +50,58 @@ model Follow {
   @@id([followerId, followingId]) // Composite primary key to ensure uniqueness
 }
 
+model JoinRealm {
+  joiner      User      @relation("JoiningRealm", fields: [joinerId], references: [id])
+  joinerId    String
+  realm       Realm     @relation("JoinedRealm", fields: [realmId], references: [id])
+  realmId     String
+  createdAt   DateTime  @default(now())
+
+  @@id([joinerId, realmId]) // Composite primary key to ensure uniqueness
+}
+
+model Realm {
+  id          String      @id @default(uuid())
+  name        String
+  description String
+  photo       String?
+
+  author      User?       @relation("RealmCreatedBy", fields: [authorId], references: [id])
+  authorId    String?
+
+  posts       Post[]
+  followers   JoinRealm[] @relation("JoinedRealm")
+
+  @@unique([name])
+}
+
 model Post {
   id          String     @id @default(uuid())
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   published   Boolean
-  text        String
+
+  realm       Realm      @relation(fields: [realmId], references: [id])
+  realmId     String
+
+  title       String
+  text        String?
   medias      Media[]
+
   author      User?      @relation(fields: [authorId], references: [id])
   authorId    String?
   likes       Like[]     @relation("LikedPost")
   comments    Comment[]
+
+  @@index([realmId])
 }
 
 model Media {
-  id          String      @id @default(uuid())
-  url         String
-  type        MediaType  // Enum to define whether it's an image or video
-  post        Post?      @relation(fields: [postId], references: [id])
-  postId      String?
+  id      String    @id @default(uuid())
+  url     String
+  type    MediaType // Enum to define whether it's an image or video
+  post    Post?     @relation(fields: [postId], references: [id])
+  postId  String?
 }
 
 model Like {

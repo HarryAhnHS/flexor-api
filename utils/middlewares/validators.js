@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const userQueries = require('../../queries/userQueries');
+const userQueries = require('../../queries/usersQueries');
 
 // Validation middleware for the sign-up form
 const validateSignUp = [

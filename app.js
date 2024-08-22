@@ -28,9 +28,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// Route distribution
+// Public routes for login + signup
 app.use('/auth', authRoutes);
-app.use('/users', usersRoutes);
+
+// Private Routes
+app.use('/users', passport.authenticate('jwt', { session: false }), usersRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

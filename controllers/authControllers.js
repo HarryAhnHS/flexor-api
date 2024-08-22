@@ -1,13 +1,12 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const userQueries = require('../queries/userQueries');
+const userQueries = require('../queries/usersQueries');
 
 module.exports = {
     signUpPost: async (req, res) => {
         // Validate sign up and handle errors
         const errors = validationResult(req);
-        console.log(req.body);
         if (!errors.isEmpty()) {
             return res.status(400).json({
                 errors: errors.array()
@@ -40,7 +39,8 @@ module.exports = {
             message: 'Invalid password'
         });
 
-        jwt.sign({id: user.id, username: user.username}, process.env.JWT_SECRET, {expiresIn: '1h'}, (err, token) => {
+        // Create jwt token 
+        jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '1h'}, (err, token) => {
             res.json({token})
         })
     },
