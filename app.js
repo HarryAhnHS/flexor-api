@@ -6,7 +6,9 @@ const express = require("express");
 const sessionMiddleware = require("./utils/configs/session-config");
 const passportConfig = require("./utils/configs/passport-config");
 
-const indexRouter = require("./routes/index");
+// Import Routes
+const authRoutes = require("./routes/authRoutes");
+const usersRoutes = require("./routes/usersRoutes");
 
 const app = express();
 app.use(express.json()); // For JSON payloads
@@ -16,7 +18,8 @@ app.use(express.urlencoded({ extended: true })); // For application/x-www-form-u
 app.use(sessionMiddleware);
 app.use(passport.session());
 
-passportConfig(passport); // Initialize Passport configuration
+// Initialize Passport configuration
+passportConfig(passport);
 
 // Debug middleware
 app.use((req, res, next) => {
@@ -25,7 +28,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/', indexRouter);
+// Route distribution
+app.use('/auth', authRoutes);
+app.use('/users', usersRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

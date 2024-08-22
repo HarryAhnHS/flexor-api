@@ -1,14 +1,9 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const db = require('../db/queries');
+const userQueries = require('../queries/userQueries');
 
 module.exports = {
-    indexGet: (req, res) => {
-        res.json({
-            message: 'hi'
-        })
-    },
     signUpPost: async (req, res) => {
         // Validate sign up and handle errors
         const errors = validationResult(req);
@@ -20,7 +15,7 @@ module.exports = {
         }
         // Add user to database
         const { email, username, password } = req.body;
-        const newUser = await db.addUser(email, username, password);
+        const newUser = await userQueries.addUser(email, username, password);
     
         // Send success response
         res.status(201).json({
@@ -36,7 +31,7 @@ module.exports = {
         const { username, password } = req.body;
 
         // Verify user login
-        const user  = await db.findUser("username", username);
+        const user  = await userQueries.findUser("username", username);
         if (!user) return res.status(401).json({
             message: 'Username not found'
         });
@@ -47,21 +42,6 @@ module.exports = {
 
         jwt.sign({id: user.id, username: user.username}, process.env.JWT_SECRET, {expiresIn: '1h'}, (err, token) => {
             res.json({token})
-        })
-    },
-
-    postPost: (req, res) => {
-        jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
-            if (err) {
-                res.status(403).json({
-                    message: "Not authorized"
-                })
-            } else {
-                res.json({
-                    message: 'Post created!',
-                    authData
-                })
-            }
         })
     },
 }
