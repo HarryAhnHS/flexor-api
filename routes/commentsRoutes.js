@@ -11,9 +11,27 @@ router.get('/', commentsControllers.getAllComments);
 router.get('/:id', commentsControllers.getComment);
 
 // Update a specific comment
-router.put('/comments/:id', isAuthorized, commentsControllers.updateComment);
+router.put('/:id', isAuthorized, commentsControllers.updateCommentContent);
 
 // Delete a specific comment
-router.delete('/comments/:id', isAuthorized, commentsControllers.deleteComment);
+router.delete('/:id', isAuthorized, commentsControllers.deleteComment);
+
+// Get all liked users for a comment
+router.get('/:id/liked', commentsControllers.getUsersWhoLikedComment);
+
+// Get nested comments from a single root comment
+router.get('/:id/nested', commentsControllers.getNestedComments);
+
+// Logged in user to add a nested comment by replying to a specific comment
+router.post('/:id/nested', commentsControllers.addNestedComment);
+
+// Logged in user to like a comment
+router.post('/:id/like', commentsControllers.loggedUserLikeComment);
+
+// Logged in user to unlike a comment
+router.delete('/:id/like', commentsControllers.loggedUserUnlikeComment);
+
+
+
 
 module.exports = router;

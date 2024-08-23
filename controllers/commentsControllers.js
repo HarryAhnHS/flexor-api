@@ -1,4 +1,6 @@
+const commentLikesQueries = require("../queries/commentLikesQueries");
 const commentsQueries = require("../queries/commentsQueries");
+const usersQueries = require("../queries/usersQueries");
 
 module.exports = {
     getAllComments: async (req, res) => {
@@ -28,11 +30,11 @@ module.exports = {
             })
         }
     },
-    updateComment: async (req, res) => {
+    updateCommentContent: async (req, res) => {
         const { id } = req.params;
         const commentContent = req.body.comment;
         try {
-            const comment = await commentsQueries.updateComment(id, commentContent);
+            const comment = await commentsQueries.updateCommentContent(id, commentContent);
             res.status(201).json({
                 message: "Succesfully updated comment",
                 comment
@@ -59,4 +61,82 @@ module.exports = {
             })
         }
     },
+    getUsersWhoLikedComment: async (req, res) => {
+        const commentId = req.params.id;
+        try {
+            const users = await usersQueries.getUsersWhoLikedComment(commentId);
+            res.status(201).json({
+                users
+            })
+
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
+    },
+    getNestedComments: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const nestedComments = await commentsQueries.getNestedComments(id);
+            res.status(201).json({
+                nestedComments
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
+    },
+    addNestedComment: async (req, res) => {
+        const userId = req.user.id; // Assuming user is authenticated and their ID is stored in req.user
+        const parentId  = req.params.id; // Get the parent comment ID from the URL
+        const { postId, commentContent } = req.body; // Get postId and comment content from the request body
+        try {
+            const nestedComment = await commentsQueries.addNestedComment(userId, postId, commentContent, parentId);
+            res.status(201).json({
+                message: "Successfully created nested comment",
+                nestedComment
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
+    },
+    loggedUserLikeComment: async (req, res) => {
+        const userId = req.user.id;
+        const commentId = req.params.id;
+        try {
+            const commentLike = await commentLikesQueries.addCommentLike(userId, commentId);
+            res.status(201).json({
+                message: "Successfully liked a comment",
+                commentLike
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
+    },
+    loggedUserUnlikeComment: async (req, res) => {
+        const userId = req.user.id;
+        const commentId = req.params.id;
+        try {
+            const commentLike = await commentLikesQueries.removeCommentLike(userId, commentId);
+            res.status(201).json({
+                message: "Successfully removed a comment",
+                commentLike
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
+    }
 }

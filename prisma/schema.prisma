@@ -91,7 +91,7 @@ model Post {
 
   title          String
   text           String?
-  medias         Image[]
+  images         Image[]
 
   author         User?       @relation(fields: [authorId], references: [id])
   authorId       String?

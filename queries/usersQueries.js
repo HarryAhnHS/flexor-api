@@ -15,9 +15,9 @@ const prisma = new PrismaClient({
 });
 
 module.exports = {
-    getUsers: async () => {
+    getAllUsers: async () => {
         try {
-            const users = await prisma.user.findMany();
+            const users = await prisma.user.findMany({});
             return users;
         } 
         catch (error) {
@@ -25,11 +25,28 @@ module.exports = {
             throw new Error('Error getting users');
         } 
     },
-    findUser: async (colName, query) => {
+    getUser: async (colName, query) => {
         try {
             const whereClause = { [colName]: query };
             const user = await prisma.user.findUnique({
-                where: whereClause
+                where: whereClause,
+                include: {
+                    _count: {
+                        select: {
+                            posts: {
+                                where: {
+                                    published: true
+                                }
+                            },
+                            likes: true,
+                            comments: {
+                                distinct: ['postId']
+                            },
+                            followers: true,
+                            following: true
+                        }
+                    }
+                }
             })
             return user;
         } 
@@ -119,35 +136,31 @@ module.exports = {
             throw new Error("Error deleting user");
         }
     },
-    getUserPosts: async (id, published = true) => {
-        try {
-            const isPublished = published; 
-            const user = await prisma.user.findUnique({
-                where: { id },
-                include: {
-                    posts: {
-                        where: {
-                            published: isPublished
-                        }
-                    }
-                }
-            })
-            return user.posts;
-        }
-        catch(error) {
-            console.error("Error getting users posts", error);
-            throw new Error("Error getting users posts");
-        }
-    },
     getUserFollowers: async (id) => {
         try {
             const user = await prisma.user.findUnique({
-                where: { id },
+                where: { 
+                  id
+                },
                 include: {
-                    followers: true
+                    followers: {
+                        include: {
+                            follower: {
+                                include: {
+                                    _count: {
+                                        select: {
+                                            posts: true,
+                                            followers: true,
+                                            following: true,
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-            })
-            return user.followers;
+            });
+            return user.follower.map(follow => follow.follower);
         }
         catch(error) {
             console.error("Error getting user's followers", error);
@@ -157,16 +170,86 @@ module.exports = {
     getUserFollowing: async (id) => {
         try {
             const user = await prisma.user.findUnique({
-                where: { id },
-                include: {
-                    following: true
+            where: { 
+                id
+            },
+            include: {
+                following: {
+                    include: {
+                        following: {
+                            include: {
+                                _count: {
+                                    select: {
+                                        posts: true,
+                                        followers: true,
+                                        following: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-            })
-            return user.following;
+            }
+            });
+            return user.following.map(follow => follow.following);
         }
         catch(error) {
             console.error("Error getting user's following", error);
             throw new Error("Error getting user's following");
         }
     },
+    getUsersWhoLikedPost: async (postId) => {
+        try {
+            const users = await prisma.user.findMany({
+                where:{
+                    likes: {
+                        some: {
+                            postId
+                        }
+                    }
+                },
+                include: {
+                    _count: {
+                        select: {
+                            posts: true,
+                            followers: true,
+                            following: true,
+                        }
+                    }
+                }
+            })
+            return users;
+        }
+        catch(error) {
+            console.error("Error getting users who liked post", error);
+            throw new Error("Error getting users who liked post");
+        }
+    },
+    getUsersWhoLikedComment: async (commentId) => {
+        try {
+            const users = await prisma.user.findMany({
+                where:{
+                    commentLikes: {
+                        some: {
+                            commentId
+                        }
+                    }
+                },
+                include: {
+                    _count: {
+                        select: {
+                            posts: true,
+                            followers: true,
+                            following: true,
+                        }
+                    }
+                }
+            })
+            return users;
+        }
+        catch(error) {
+            console.error("Error getting users who liked comment", error);
+            throw new Error("Error getting users who liked comment");
+        }
+    }
 }

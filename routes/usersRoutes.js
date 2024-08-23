@@ -7,31 +7,34 @@ const usersControllers = require("../controllers/usersControllers");
 
 
 // List all users
-router.get('/', usersControllers.getUsers);
+router.get('/', usersControllers.getAllUsers);
 
-// Get a specific user
-router.get('/:id', usersControllers.findUser);
+// Get a specific metadetails for user - num published posts, num posts liked, num posts commented, num followers, num following
+router.get('/:id', usersControllers.getUser);
 
-// Update user details except profile photo
-router.put('/:id', isAuthorized, usersControllers.updateUser);
+// Get a specific user posts including num likes + (root comments including count of nested comment)
+router.get('/:id/posts', usersControllers.getUserPosts);
+
+// Get all drafts from a user
+router.get('/:id/drafts', isAuthorized, usersControllers.getUserDrafts);
+
+// Get specific posts user liked including the Post details
+router.get('/:id/liked', usersControllers.getUserLikedPosts);
+
+// Get specific posts user commented on including the Post details
+router.get('/:id/commented', usersControllers.getUserCommentedPosts);
+
+// Get specific user followers including their User details
+router.get('/:id/followers', usersControllers.getUserFollowers);
+
+// Get specific user following including their User details
+router.get('/:id/following', usersControllers.getUserFollowing);
 
 // TODO Update profile photo for user
 router.put('/:id/profile-picture', isAuthorized, upload.single('profilePicture'), usersControllers.updateUserProfilePicture);
 
 // Delete a user
 router.delete('/:id', isAuthorized, usersControllers.deleteUser);
-
-// Get all posts from a user
-router.get('/:id/posts', usersControllers.getUserPosts);
-
-// Get all drafts from a user
-router.get('/:id/posts/drafts', isAuthorized, usersControllers.getUserDrafts);
-
-// Get all followers from a user
-router.get('/:id/followers', usersControllers.getUserFollowers);
-
-// Get all following from a user
-router.get('/:id/following', usersControllers.getUserFollowing);
 
 // Follow a user
 router.post('/:id/follow', usersControllers.loggedUserFollow);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // List all realms
-router.get('/realms');
+router.get('/realms', realmsController.);
 // Create a new realm
 router.post('/realms');
 // Retrieve a single realm by ID

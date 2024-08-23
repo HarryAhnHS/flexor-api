@@ -14,6 +14,7 @@ const prisma = new PrismaClient({
 });
 
 module.exports = {
+
     addFollow: async (followerId, followingId) => {
         try {
             const follow = await prisma.follow.create({

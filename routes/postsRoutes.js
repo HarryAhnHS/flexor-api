@@ -11,8 +11,11 @@ router.get('/', postsControllers.getAllPosts);
 // TODO Get feed of posts based on following users + realms
 // router.get('/feed', postsControllers.getFeed);
 
-// Get a specific post
+// Get a specific post including realm, author, images, and post's root comments + count of nested comments
 router.get('/:id', postsControllers.getPost);
+
+// Get all users who liked a post
+router.get('/:id/liked', postsControllers.getPostLikedUsers);
 
 // Update a post
 router.put('/:id', isAuthorized, postsControllers.updatePost);
@@ -20,14 +23,7 @@ router.put('/:id', isAuthorized, postsControllers.updatePost);
 // Delete a post
 router.delete('/:id', isAuthorized, postsControllers.deletePost);
 
-// Get all root comments under a post
-router.get('/:id/comments', postsControllers.getPostComments);
-
-// Get all likes from a post
-router.get('/:id/likes', postsControllers.getPostLikes);
-
-// Actions
-// Create a new post or draft (published or not)
+// Logged user to create a new post or draft (published or not)
 router.post('/', upload.array('image', 10), postsControllers.createPost);
 
 // Logged user to like a post

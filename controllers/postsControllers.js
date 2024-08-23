@@ -21,6 +21,20 @@ module.exports = {
             })
         }
     },
+    getPost: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const post = await postsQueries.getPost(id);
+            res.status(201).json({
+                post
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
     createPost: async (req, res) => {
         // Create a new Post and handle both posts (published = true) and saves as draft
         // Realm, title, text + optional medias
@@ -66,23 +80,8 @@ module.exports = {
             // Respond with the created post
             res.status(201).json({
                 message: "Succesfully created post",
-                post,
-                uploadedImages
-            });
-        }
-        catch(error) {
-            res.status(500).json({
-                error: error.message
-            })
-        }
-    },
-    getPost: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const post = await postsQueries.getPost(id);
-            res.status(201).json({
                 post
-            })
+            });
         }
         catch(error) {
             res.status(500).json({
@@ -170,28 +169,13 @@ module.exports = {
             })
         }
     },
-    getPostComments: async (req, res) => {
+    getPostLikedUsers: async (req, res) => {
         const { id } = req.params;
         try {
-            const comments = await postsQueries.getPostComments(id);
+            const usersWhoLikedPost = await usersQueries.getUsersWhoLikedPost(id);
             // Respond with the created post
             res.status(201).json({
-                comments
-            });
-        }
-        catch(error) {
-            res.status(500).json({
-                error: error.message
-            })
-        }
-    },
-    getPostLikes: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const likes = await postsQueries.getPostLikes(id);
-            // Respond with the created post
-            res.status(201).json({
-                likes
+                usersWhoLikedPost
             });
         }
         catch(error) {
@@ -239,7 +223,7 @@ module.exports = {
 
         try {
             // create root comment
-            const comment = await commentsQueries.addComment(userId, postId, commentContent);
+            const comment = await commentsQueries.addRootComment(userId, postId, commentContent);
             res.status(201).json({
                 message: "successfully created root comment to post",
                 comment
@@ -248,6 +232,22 @@ module.exports = {
         catch(error) {
             res.status(500).json({
                 error: error.message
+            })
+        }
+    },
+    loggedUserAddNestedComment: async (req, res) => {
+        const userId = req.user.id;
+        const postId = req.params.id;
+        const commentContent = req.body.comment;
+        try {
+            const nestedComment = await commentsQueries.addNestedComment(id);
+            res.status(201).json({
+                nestedComment
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
             })
         }
     },

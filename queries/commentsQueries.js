@@ -26,11 +26,7 @@ module.exports = {
     },
     getComment: async (id) => {
         try {
-            const comment = await prisma.comment.findUnique({
-                where: {
-                    id
-                }
-            });
+            const comment = await prisma.comment.findUnique({});
             return comment;
         }
         catch(error) {
@@ -38,14 +34,13 @@ module.exports = {
             throw new Error("Error getting comment by id");
         } 
     },
-    addComment: async (userId, postId, commentContent, parentId = null) => {
+    addRootComment: async (userId, postId, commentContent) => {
         try {
             const comment = await prisma.comment.create({
                 data: {
                   comment: commentContent,
                   userId,
                   postId,
-                  parentId,
                 },
             });
             return comment;
@@ -55,7 +50,7 @@ module.exports = {
             throw new Error("Error adding comment");
         }
     },
-    updateComment: async (id, commentContent) => {
+    updateCommentContent: async (id, commentContent) => {
         try {
             const comment = await prisma.comment.update({
                 where: {
@@ -85,6 +80,45 @@ module.exports = {
             console.error("Error deleting comment", error);
             throw new Error("Error deleting comment");
         }
-    }
+    },
+    getNestedComments: async (id) => {
+        try {
+            const comment = await prisma.comment.findMany({
+                where: {
+                    parentId: id
+                },
+                include: {
+                    user,
+                    _count: {
+                        select: {
+                            likes
+                        }
+                    }
+                },
+            });
+            return comment;
+        }
+        catch(error) {
+            console.error("Error getting nested comments", error);
+            throw new Error("Error getting nested comments");
+        }
+    },
+    addNestedComment: async (userId, postId, commentContent, parentId) => {
+        try {
+            const comment = await prisma.comment.create({
+                data: {
+                    comment: commentContent,
+                    userId,
+                    postId,
+                    parentId,
+                },
+            });
+            return comment;
+        } 
+        catch (error) {
+            console.error("Error adding nested comment", error);
+            throw new Error("Error adding nested comment");
+        }
+    },
 
 }
