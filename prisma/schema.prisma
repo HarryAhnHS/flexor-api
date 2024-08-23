@@ -26,12 +26,17 @@ model User {
   email          String      @unique
   username       String      @unique
   password       String
-  profilePicture String?
   bio            String?
+
+  // Profile picture
+  profilePictureUrl String?
+  profilePictureId  String?
 
   posts          Post[]
   likes          Like[]      @relation("LikedBy")
+
   comments       Comment[]
+  commentLikes   CommentLike[]
 
   followers      Follow[]    @relation("Followers")
   following      Follow[]    @relation("Following")
@@ -86,7 +91,7 @@ model Post {
 
   title          String
   text           String?
-  medias         Media[]
+  medias         Image[]
 
   author         User?       @relation(fields: [authorId], references: [id])
   authorId       String?
@@ -96,10 +101,10 @@ model Post {
   @@index([realmId])
 }
 
-model Media {
+model Image {
   id             String      @id @default(uuid())
   url            String
-  type           MediaType // Enum to define whether it's an image or video
+  publicId       String
   post           Post?       @relation(fields: [postId], references: [id])
   postId         String?
 }
@@ -120,7 +125,8 @@ model Like {
 model Comment {
   id             String      @id @default(uuid())
   createdAt      DateTime    @default(now())
-  content        String
+  updatedAt      DateTime    @updatedAt
+  comment        String
   user           User?       @relation(fields: [userId], references: [id])
   userId         String?
   post           Post?       @relation(fields: [postId], references: [id])
@@ -128,10 +134,20 @@ model Comment {
   parent         Comment?    @relation("NestedComments", fields: [parentId], references: [id])
   parentId       String?
   nestedComments Comment[]   @relation("NestedComments")
+
+  likes          CommentLike[]
 }
 
-// Enum to specify the type of media
-enum MediaType {
-  IMAGE
-  VIDEO
+model CommentLike {
+  id             String      @id @default(uuid())
+  createdAt      DateTime    @default(now())
+  
+  user           User        @relation(fields: [userId], references: [id])
+  userId         String
+  comment        Comment     @relation(fields: [commentId], references: [id])
+  commentId      String
+
+  @@unique([userId, commentId]) // Ensures a user can like a comment only once
+  @@index([userId])
+  @@index([commentId])
 }

@@ -10,6 +10,7 @@ const passportConfig = require("./utils/configs/passport-config");
 // Import Routes
 const authRoutes = require("./routes/authRoutes");
 const usersRoutes = require("./routes/usersRoutes");
+const postsRoutes = require("./routes/postsRoutes");
 
 const app = express();
 app.use(express.json()); // For JSON payloads
@@ -34,6 +35,7 @@ app.use('/auth', authRoutes);
 
 // Private Routes
 app.use('/users', passport.authenticate('jwt', { session: false }), usersRoutes);
+app.use('/posts', passport.authenticate('jwt', { session: false }), postsRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

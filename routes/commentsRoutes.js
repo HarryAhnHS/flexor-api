@@ -1,29 +1,19 @@
 const express = require('express');
+const commentsControllers = require('../controllers/commentsControllers');
+const isAuthorized = require('../utils/middlewares/isAuthorized');
 const router = express.Router();
 
-// List all comments for a post
-router.get('/posts/:postId/comments', (req, res) => {
-  // Handle listing comments for a specific post
-});
 
-// Add a new comment to a post
-router.post('/posts/:postId/comments', (req, res) => {
-  // Handle adding a new comment to a post
-});
+// Get all comments
+router.get('/', commentsControllers.getAllComments);
 
-// Get a specific comment
-router.get('/comments/:id', (req, res) => {
-  // Handle fetching comment details by ID
-});
+// Get a specific comment by id
+router.get('/:id', commentsControllers.getComment);
 
 // Update a specific comment
-router.patch('/comments/:id', (req, res) => {
-  // Handle updating a specific comment by ID
-});
+router.put('/comments/:id', isAuthorized, commentsControllers.updateComment);
 
 // Delete a specific comment
-router.delete('/comments/:id', (req, res) => {
-  // Handle deleting a specific comment by ID
-});
+router.delete('/comments/:id', isAuthorized, commentsControllers.deleteComment);
 
 module.exports = router;

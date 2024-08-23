@@ -19,7 +19,8 @@ module.exports = {
         try {
             const users = await prisma.user.findMany();
             return users;
-        } catch (error) {
+        } 
+        catch (error) {
             console.error('Error getting users:', error);
             throw new Error('Error getting users');
         } 
@@ -31,7 +32,8 @@ module.exports = {
                 where: whereClause
             })
             return user;
-        } catch (error) {
+        } 
+        catch (error) {
             console.error('Error finding user:', error);
             throw new Error('Error finding user');
         }
@@ -51,6 +53,8 @@ module.exports = {
                     email: email,
                     username: username,
                     password: hashedPassword,
+                    profilePictureUrl: process.env.DEFAULT_PROFILE_PICTURE_URL,
+                    profilePictureId: process.env.DEFAULT_PROFILE_PICTURE_PUBLIC_ID
                 }
             })
 
@@ -76,14 +80,31 @@ module.exports = {
                 updateData.password = hashedPassword;
             };
     
-            return await prisma.user.update({
+            const updatedUser =  await prisma.user.update({
                 where: { id },
                 data: updateData,
             });
+            return updatedUser;
         }
         catch(error) {
             console.error('Error updating user', error);
             throw new Error('Error updating user');
+        }
+    },
+    updateUserProfilePicture: async (id, url, public_id) => {
+        try {
+            const user = await prisma.user.update({
+                where: { id },
+                data: {
+                    profilePicture: url,
+                    profilePictureId: public_id,
+                }
+            })
+            return user;
+        }
+        catch(error) {
+            console.error("Error updating user profile photo", error);
+            throw new Error("Error updating user profile photo");
         }
     },
     deleteUser: async (id) => {
@@ -111,9 +132,6 @@ module.exports = {
                     }
                 }
             })
-            if (!user) {
-                throw new Error("User not found")
-            }
             return user.posts;
         }
         catch(error) {
@@ -150,5 +168,5 @@ module.exports = {
             console.error("Error getting user's following", error);
             throw new Error("Error getting user's following");
         }
-    }
+    },
 }
