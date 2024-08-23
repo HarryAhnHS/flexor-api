@@ -71,7 +71,7 @@ module.exports = {
                     username: username,
                     password: hashedPassword,
                     profilePictureUrl: process.env.DEFAULT_PROFILE_PICTURE_URL,
-                    profilePictureId: process.env.DEFAULT_PROFILE_PICTURE_PUBLIC_ID
+                    profilePicturePublicId: process.env.DEFAULT_PROFILE_PICTURE_PUBLIC_ID
                 }
             })
 
@@ -106,22 +106,6 @@ module.exports = {
         catch(error) {
             console.error('Error updating user', error);
             throw new Error('Error updating user');
-        }
-    },
-    updateUserProfilePicture: async (id, url, public_id) => {
-        try {
-            const user = await prisma.user.update({
-                where: { id },
-                data: {
-                    profilePicture: url,
-                    profilePictureId: public_id,
-                }
-            })
-            return user;
-        }
-        catch(error) {
-            console.error("Error updating user profile photo", error);
-            throw new Error("Error updating user profile photo");
         }
     },
     deleteUser: async (id) => {
@@ -251,5 +235,35 @@ module.exports = {
             console.error("Error getting users who liked comment", error);
             throw new Error("Error getting users who liked comment");
         }
-    }
+    },
+    getUserProfilePicturePublicId: async (id) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: {
+                    id
+                }
+            });
+            return user.profilePicturePublicId;
+        } 
+        catch (error) {
+            console.error('Error getting user profile picture public id', error);
+            throw new Error('Error getting user profile picture public id');
+        } 
+    },
+    updateUserProfilePicture: async (id, url, public_id) => {
+        try {
+            const user = await prisma.user.update({
+                where: { id },
+                data: {
+                    profilePictureUrl: url,
+                    profilePicturePublicId: public_id,
+                }
+            })
+            return user;
+        }
+        catch(error) {
+            console.error("Error updating user profile photo", error);
+            throw new Error("Error updating user profile photo");
+        }
+    },
 }

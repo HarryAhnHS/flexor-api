@@ -57,26 +57,6 @@ module.exports = {
             // Create a new post
             const post = await postsQueries.createPost(postData);
 
-            // Handle images uploads if any
-            if (images && images.length > 0) {
-                const imageData = [];
-                // For each file in uploaded images array, upload each file and push data into Image table
-                for (const image of images) {
-                    const result = await cloudinary.uploader.upload(image.path, {
-                      resource_type: 'auto',
-                    });
-            
-                    imageData.push({
-                      url: result.secure_url, // Cloudinary URL
-                      postId: post.id,
-                      publicId: result.public_id,  // Store the public ID for future deletion
-                    });
-            
-                    // Remove local file after upload
-                    fs.unlinkSync(image.path);
-                }
-                const uploadedImages = await imagesQueries.uploadImages(imageData);
-            }
             // Respond with the created post
             res.status(201).json({
                 message: "Succesfully created post",
@@ -107,45 +87,17 @@ module.exports = {
             // Update post in the database
             const updatedPost = await postsQueries.updatePost(id, updatedPostData);
 
-            // Handle image removals
+            // Handle image removals using axios to call image router
             if (removeImages.length > 0) {
                 for (const imageId of removeImages) {
-                    // Fetch the image from the database
-                    const image = await imagesQueries.getImage(imageId);
-                    if (image) {
-                        // Remove image from Cloudinary
-                        await cloudinary.uploader.destroy(image.publicId);  // Assuming you stored publicId
-                        // Delete image record from the database
-                        await imagesQueries.deleteImage(imageId);
-                    }
+                    await axios.delete(`/images/${imageId}`);
                 }
-            }
-
-            // Handle new image uploads
-            if (images && images.length > 0) {
-                const imageData = [];
-                for (const image of images) {
-                    const result = await cloudinary.uploader.upload(image.path, {
-                        resource_type: 'auto',
-                    });
-
-                    imageData.push({
-                        url: result.secure_url,
-                        postId: updatedPost.id,
-                        publicId: result.public_id,  // Store the public ID for future deletion
-                    });
-
-                    // Remove local file after upload
-                    fs.unlinkSync(file.path);
-                }
-                const uploadedImages = await imagesQueries.uploadImages(imageData);
             }
 
             // Respond with the updated post
             res.status(201).json({
                 message: "Succesfully updated post",
-                updatedPost,
-                uploadedImages
+                updatedPost
             });
         } catch (error) {
             res.status(500).json({

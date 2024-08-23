@@ -32,9 +32,6 @@ module.exports = {
                     id
                 }
             });
-            if (!image) {
-                throw new Error("Cannot find image");
-            }
             return image;
         }
         catch (error) {
@@ -49,9 +46,6 @@ module.exports = {
                     id
                 }
             });
-            if (!image) {
-                throw new Error("Cannot delete image");
-            }
             return image;
         }
         catch (error) {

@@ -145,42 +145,6 @@ module.exports = {
             })
         } 
     },
-    updateUserProfilePicture: async(req, res) => {
-        const { id } = req.params;
-        const image = req.file;
-        try {
-            // Fetch current user profile information
-            const user = await usersQueries.findUser("id", id);
-            const currentProfilePictureId = user.profilePictureId;
-
-            // Upload new image
-            const result = await cloudinary.uploader.upload(image.path, {
-                resource_type: 'auto',
-            });
-
-            // Delete old image if it exists and is not the default
-            if (currentProfilePictureId && 
-                currentProfilePictureId !== process.env.DEFAULT_PROFILE_PICTURE_PUBLIC_ID) {
-                await cloudinary.uploader.destroy(currentProfilePictureId);
-            }
-            // Update user in the database with new image URL and public ID
-            await usersQueries.updateUserProfilePicture(id, result.secure_url, result.public_id);
-
-            // Respond with success
-            res.status(200).json({
-                message: "Succesfully updated user profile picture",
-                profilePictureUrl: result.secure_url,
-            });
-
-            // Remove local file after upload
-            fs.unlinkSync(file.path);
-          } 
-          catch (error) {
-            res.status(500).json({
-                error: error.message
-            })
-          } 
-    },
     deleteUser: async (req, res) => {
         const { id } = req.params;
         try {

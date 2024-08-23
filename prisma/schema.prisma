@@ -30,7 +30,7 @@ model User {
 
   // Profile picture
   profilePictureUrl String?
-  profilePictureId  String?
+  profilePicturePublicId  String?
 
   posts          Post[]
   likes          Like[]      @relation("LikedBy")
@@ -69,13 +69,15 @@ model Realm {
   id             String      @id @default(uuid())
   name           String
   description    String
-  photo          String?
+  // Picture
+  realmPictureUrl String?
+  realmPicturePublicId  String?
 
-  author         User?       @relation("RealmCreatedBy", fields: [authorId], references: [id])
-  authorId       String?
+  creator        User?       @relation("RealmCreatedBy", fields: [creatorId], references: [id])
+  creatorId      String?
 
   posts          Post[]
-  followers      JoinRealm[] @relation("JoinedRealm")
+  joined         JoinRealm[] @relation("JoinedRealm")
 
   @@unique([name])
 }

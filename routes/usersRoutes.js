@@ -30,9 +30,6 @@ router.get('/:id/followers', usersControllers.getUserFollowers);
 // Get specific user following including their User details
 router.get('/:id/following', usersControllers.getUserFollowing);
 
-// TODO Update profile photo for user
-router.put('/:id/profile-picture', isAuthorized, upload.single('profilePicture'), usersControllers.updateUserProfilePicture);
-
 // Delete a user
 router.delete('/:id', isAuthorized, usersControllers.deleteUser);
 
