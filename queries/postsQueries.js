@@ -24,11 +24,40 @@ module.exports = {
             throw new Error("Error getting all posts");
         }
     },
-    getFeed: async (userId, page=1, pageSize=10) => {
+    getFeed: async (followingUserIds, joinedRealmIds, page=1, pageSize=10) => {
         try {
              // Calculate offset
             const offset = (page - 1) * pageSize;
 
+            // Fetch posts from followed users or joined realms in a single query
+            const feedPosts = await prisma.post.findMany({
+                where: {
+                    published: true,
+                    OR: [
+                        { authorId: { in: followingUserIds } },
+                        { realmId: { in: joinedRealmIds } }
+                    ]
+                },
+                include: {
+                    author: true,
+                    realm: true,
+                    images: true,
+                    _count: {
+                        select: {
+                            likes: true,
+                            comments: true
+                        }
+                    }
+                },
+                distinct: ['id'], // Ensures no duplicate posts
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                skip: offset,
+                take: pageSize
+            });
+
+            return feedPosts;
         }
         catch(error) {
             console.error("Error getting feed", error);

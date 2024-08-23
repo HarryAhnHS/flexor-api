@@ -71,7 +71,7 @@ module.exports = {
         }
         catch(error) {
             console.error("Error getting user created realms", error);
-            throw new Error("Error getting user created  realms");
+            throw new Error("Error getting user created realms");
         }
     },
     createRealm: async (creatorId, name, description) => {

@@ -24,13 +24,14 @@ module.exports = {
         const { page = 1, pageSize = 10 } = req.query;
 
         try {
-            // Get user's following User Ids
+            // Get user's following user and joined realms Ids
             const followingUserIds = (await usersQueries.getUserFollowing(userId)).map(user => user.id);
-            // Get user's joined Realm Ids
-            const followingRealmIds = (await realmsQueries.getUserJoinedRealms(userId))
-            const posts = await postsQueries.getFeed(userId, parseInt(page), parseInt(pageSize));
+            const joinedRealmIds = (await realmsQueries.getUserJoinedRealms(userId)).map(realm => realm.id);
+            // Get posts from user and realm Ids
+            const feedPosts = await postsQueries.getFeed(followingUserIds, joinedRealmIds, parseInt(page), parseInt(pageSize));
+            
             res.status(201).json({
-                posts
+                feedPosts
             })
         }
         catch(error) {
