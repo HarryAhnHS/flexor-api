@@ -8,8 +8,8 @@ const router = express.Router();
 // List all posts
 router.get('/', postsControllers.getAllPosts);
 
-// TODO Get feed of posts based on following users + realms
-// router.get('/feed', postsControllers.getFeed);
+// TODO Get feed of posts based on following users + realms - req.query page and pageSize to paginate
+router.get('/feed', postsControllers.getFeed);
 
 // Get a specific post including realm, author, images, and post's root comments + count of nested comments
 router.get('/:id', postsControllers.getPost);

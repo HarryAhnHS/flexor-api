@@ -1,4 +1,3 @@
-
 const { PrismaClient } = require("@prisma/client");
 
 // Set database based on test or development node_env
@@ -23,6 +22,56 @@ module.exports = {
         catch(error) {
             console.error("Error getting all realms", error);
             throw new Error("Error getting all realms");
+        }
+    },
+    getUserJoinedRealms: async (userId) => {
+        try {
+            const realms = await prisma.realm.findMany({
+                where: {
+                    joined: {
+                        some: {
+                            joinerId: userId
+                        }
+                    }
+                },
+                include: {
+                    creator: true,
+                    _count: {
+                        select: {
+                            posts: true,
+                            joined: true,
+                        }
+                    }
+                }
+            });
+            return realms;
+        }
+        catch(error) {
+            console.error("Error getting user joined realms", error);
+            throw new Error("Error getting user joined realms");
+        }
+    },
+    getUserCreatedRealms: async (userId) => {
+        try {
+            const realms = await prisma.realm.findMany({
+                where: {
+                    creatorId: userId
+                },
+                include: {
+                    creator: true,
+                    _count: {
+                        select: {
+                            posts: true,
+                            joined: true,
+                        }
+                    }
+                }
+            });
+            return realms;
+        }
+        catch(error) {
+            console.error("Error getting user created realms", error);
+            throw new Error("Error getting user created  realms");
         }
     },
     createRealm: async (creatorId, name, description) => {

@@ -1,10 +1,8 @@
-const cloudinary = require('../utils/configs/cloudinary-config');
-const fs = require('fs');
-
 const postsQueries = require("../queries/postsQueries");
-const imagesQueries = require("../queries/imagesQueries");
 const likesQueries = require('../queries/likesQueries');
 const commentsQueries = require('../queries/commentsQueries');
+const usersQueries = require("../queries/usersQueries");
+const realmsQueries = require("../queries/realmsQueries");
 
 module.exports = {
     getAllPosts: async (req, res) => {
@@ -14,6 +12,26 @@ module.exports = {
             res.status(201).json({
                 posts
             });
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
+    getFeed: async (req, res) => {
+        const userId = req.user.id;
+        const { page = 1, pageSize = 10 } = req.query;
+
+        try {
+            // Get user's following User Ids
+            const followingUserIds = (await usersQueries.getUserFollowing(userId)).map(user => user.id);
+            // Get user's joined Realm Ids
+            const followingRealmIds = (await realmsQueries.getUserJoinedRealms(userId))
+            const posts = await postsQueries.getFeed(userId, parseInt(page), parseInt(pageSize));
+            res.status(201).json({
+                posts
+            })
         }
         catch(error) {
             res.status(500).json({

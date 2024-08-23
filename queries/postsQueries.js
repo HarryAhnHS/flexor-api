@@ -24,6 +24,17 @@ module.exports = {
             throw new Error("Error getting all posts");
         }
     },
+    getFeed: async (userId, page=1, pageSize=10) => {
+        try {
+             // Calculate offset
+            const offset = (page - 1) * pageSize;
+
+        }
+        catch(error) {
+            console.error("Error getting feed", error);
+            throw new Error("Error getting feed");
+        }
+    },
     getUserPosts: async (userId) => {
         try {
             const posts = await prisma.post.findMany({

@@ -1,9 +1,7 @@
-const cloudinary = require('../utils/configs/cloudinary-config');
-const fs = require('fs');
-
 const usersQueries = require('../queries/usersQueries');
 const followsQueries = require('../queries/followsQueries');
 const postsQueries = require('../queries/postsQueries');
+const realmsQueries = require('../queries/realmsQueries');
 
 module.exports = {
     getAllUsers: async(req, res) => {
@@ -114,6 +112,34 @@ module.exports = {
             const followingUsers = await usersQueries.getUserFollowing(id);
             res.status(201).json({
                 followingUsers
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
+    getUserJoinedRealms: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const realms = await realmsQueries.getUserJoinedRealms(id);
+            res.status(201).json({
+                realms
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+    },
+    getUserCreatedRealms: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const realms = await realmsQueries.getUserCreatedRealms(id);
+            res.status(201).json({
+                realms
             })
         }
         catch(error) {

@@ -30,6 +30,12 @@ router.get('/:id/followers', usersControllers.getUserFollowers);
 // Get specific user following including their User details
 router.get('/:id/following', usersControllers.getUserFollowing);
 
+// Get specific user joined realms
+router.get('/:id/joined', usersControllers.getUserJoinedRealms);
+
+// Get specific user created realms
+router.get('/:id/joined', usersControllers.getUserCreatedRealms);
+
 // Delete a user
 router.delete('/:id', isAuthorized, usersControllers.deleteUser);
 
