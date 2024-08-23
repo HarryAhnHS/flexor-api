@@ -16,7 +16,7 @@ router.get('/:id', usersControllers.getUser);
 router.get('/:id/posts', usersControllers.getUserPosts);
 
 // Get all drafts from a user
-router.get('/:id/drafts', isAuthorized, usersControllers.getUserDrafts);
+router.get('/:id/drafts', isAuthorized("user"), usersControllers.getUserDrafts);
 
 // Get specific posts user liked including the Post details
 router.get('/:id/liked', usersControllers.getUserLikedPosts);
@@ -34,10 +34,10 @@ router.get('/:id/following', usersControllers.getUserFollowing);
 router.get('/:id/joined', usersControllers.getUserJoinedRealms);
 
 // Get specific user created realms
-router.get('/:id/created', usersControllers.getUserCreatedRealms);
+router.get('/:id/created', isAuthorized("user"), usersControllers.getUserCreatedRealms);
 
 // Delete a user
-router.delete('/:id', isAuthorized, usersControllers.deleteUser);
+router.delete('/:id', isAuthorized("user"), usersControllers.deleteUser);
 
 // Follow a user
 router.post('/:id/follow', usersControllers.loggedUserFollow);

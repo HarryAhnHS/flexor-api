@@ -4,6 +4,7 @@ const usersQueries = require("../queries/usersQueries");
 
 module.exports = {
     uploadPostImages: async (req, res) => {
+        const ownerId = req.user.id;
         const images = req.files;
         const postId = req.body.postId; // Get postId from req body
         try {
@@ -17,6 +18,7 @@ module.exports = {
                     });
             
                     imageData.push({
+                        ownerId: ownerId,
                         url: result.secure_url, // Cloudinary URL
                         postId: postId,
                         publicId: result.public_id,  // Store the public ID for future deletion
@@ -77,7 +79,7 @@ module.exports = {
             });
 
             // Update user in the database with new image URL and public ID
-            await usersQueries.updateUserProfilePicture(id, result.secure_url, result.public_id);
+            await usersQueries.updateUserProfilePicture(userId, result.secure_url, result.public_id);
 
             // Delete old image if it exists and is not the default
             if (currentId !== process.env.DEFAULT_PROFILE_PICTURE_PUBLIC_ID) {
@@ -100,7 +102,7 @@ module.exports = {
         } 
     },
     updateRealmPicture: async(req, res) => {
-        const { realmId } = req.body; 
+        const realmId = req.params.id; 
         const image = req.file;
         try {
             // Fetch current realm picture current public id
@@ -112,7 +114,7 @@ module.exports = {
             });
 
             // Update realm in the database with new image URL and public ID
-            await realmsQueries.updateRealmPicture(id, result.secure_url, result.public_id);
+            await realmsQueries.updateRealmPicture(realmId, result.secure_url, result.public_id);
 
             // Delete old image if it exists and is not the default
             if (currentId !== process.env.DEFAULT_REALM_PICTURE_PUBLIC_ID) {

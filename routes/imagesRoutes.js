@@ -4,16 +4,16 @@ const upload = require('../utils/configs/multer-config');
 const imagesControllers = require('../controllers/imagesControllers');
 const isAuthorized = require('../utils/middlewares/isAuthorized');
 
-// Route to upload images for posts - requires a postId as req body
+// Logged user to upload images for posts - requires a postId as req body
 router.post('/', upload.array('image', 10), imagesControllers.uploadPostImages);
 
-// Route to delete post images
-router.delete('/:id', imagesControllers.deletePostImage);
+// User to delete post images
+router.delete('/:id', isAuthorized("image").imagesControllers.deletePostImage);
 
-// Route to upload + update profile photo for user
-router.post('/profile-picture', isAuthorized, upload.single('profilePhoto'), imagesControllers.updateUserProfilePicture);
+// Logged user to upload + update profile photo url and public id for themselves
+router.post('/profile-picture', upload.single('profilePhoto'), imagesControllers.updateUserProfilePicture);
 
-// Route to upload + update profile photo for realm - requires a realmId as req body
-router.post('/realm-picture', isAuthorized, upload.single('realmProfilePhoto'), imagesControllers.updateRealmPicture);
+// User who created realm to upload + update profile photo for realm - requires a realmId as req body
+router.post('/:id/realm-picture', isAuthorized("realm"), upload.single('realmProfilePhoto'), imagesControllers.updateRealmPicture);
 
 module.exports = router;

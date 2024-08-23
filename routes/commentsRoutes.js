@@ -11,10 +11,10 @@ router.get('/', commentsControllers.getAllComments);
 router.get('/:id', commentsControllers.getComment);
 
 // Update a specific comment
-router.put('/:id', isAuthorized, commentsControllers.updateCommentContent);
+router.put('/:id', isAuthorized("comment"), commentsControllers.updateCommentContent);
 
 // Delete a specific comment
-router.delete('/:id', isAuthorized, commentsControllers.deleteComment);
+router.delete('/:id', isAuthorized("comment"), commentsControllers.deleteComment);
 
 // Get all liked users for a comment
 router.get('/:id/liked', commentsControllers.getUsersWhoLikedComment);
@@ -30,8 +30,5 @@ router.post('/:id/like', commentsControllers.loggedUserLikeComment);
 
 // Logged in user to unlike a comment
 router.delete('/:id/like', commentsControllers.loggedUserUnlikeComment);
-
-
-
 
 module.exports = router;

@@ -1,9 +1,74 @@
-const isAuthorized = (req, res, next) => {
-    const userId = req.params.id || req.body.userId; // ID in the route or body
-    if (req.user.id === userId) {
-        return next();
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+// Unified Authorization Middleware
+const isAuthorized = (resourceType) => {
+  return async (req, res, next) => {
+    try {
+      const { id } = req.params; // ID of the resource from the URL
+      const userId = req.user.id; // ID of the currently logged-in user
+
+      let resource;
+
+      // Determine which resource to check and the corresponding field
+      switch (resourceType) {
+        case 'post':
+          resource = await prisma.post.findUnique({
+            where: { id },
+            select: { authorId: true } // Select only the authorId
+          });
+          if (resource?.authorId !== userId) {
+            return res.status(403).json({ error: "Unauthorized access" });
+          }
+          break;
+        case 'image':
+          resource = await prisma.image.findUnique({
+            where: { id },
+            select: { ownerId: true } // Select only the authorId
+          });
+          if (resource?.ownerId !== userId) {
+            return res.status(403).json({ error: "Unauthorized access" });
+          }
+          break;
+        case 'comment':
+          resource = await prisma.comment.findUnique({
+            where: { id },
+            select: { userId: true } // Select only the userId
+          });
+          if (resource?.userId !== userId) {
+            return res.status(403).json({ error: "Unauthorized access" });
+          }
+          break;
+        case 'realm':
+          resource = await prisma.realm.findUnique({
+            where: { id },
+            select: { creatorId: true } // Select only the creatorId
+          });
+          if (resource?.creatorId !== userId) {
+            return res.status(403).json({ error: "Unauthorized access" });
+          }
+          break;
+        case 'user':
+          if (id !== userId) {
+            return res.status(403).json({ error: "Unauthorized access" });
+          }
+          break;
+        default:
+          return res.status(400).json({ error: "Invalid resource type" });
+      }
+
+      // If the resource is not found, return a 404
+      if (!resource) {
+        return res.status(404).json({ error: `${resourceType} not found` });
+      }
+
+      // Proceed to the next middleware or route handler
+      next();
+    } catch (error) {
+      console.error(`Error in authorization middleware: ${error.message}`);
+      res.status(500).json({ error: "Internal server error" });
     }
-    return res.status(403).json({ message: 'Forbidden: Access is denied.' });
+  };
 };
 
 module.exports = isAuthorized;

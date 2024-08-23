@@ -33,6 +33,7 @@ model User {
   profilePicturePublicId  String?
 
   posts          Post[]
+  images         Image[]
   likes          Like[]      @relation("LikedBy")
 
   comments       Comment[]
@@ -69,7 +70,6 @@ model Realm {
   id             String      @id @default(uuid())
   name           String
   description    String
-  // Picture
   realmPictureUrl String?
   realmPicturePublicId  String?
 
@@ -107,6 +107,8 @@ model Image {
   id             String      @id @default(uuid())
   url            String
   publicId       String
+  owner          User?        @relation(fields: [ownerId], references: [id])
+  ownerId        String?
   post           Post?       @relation(fields: [postId], references: [id])
   postId         String?
 }
