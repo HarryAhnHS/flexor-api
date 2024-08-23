@@ -34,7 +34,7 @@ router.get('/:id/following', usersControllers.getUserFollowing);
 router.get('/:id/joined', usersControllers.getUserJoinedRealms);
 
 // Get specific user created realms
-router.get('/:id/joined', usersControllers.getUserCreatedRealms);
+router.get('/:id/created', usersControllers.getUserCreatedRealms);
 
 // Delete a user
 router.delete('/:id', isAuthorized, usersControllers.deleteUser);

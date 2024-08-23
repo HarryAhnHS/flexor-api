@@ -3,7 +3,6 @@ const passport = require('passport');
 
 const controllers = require('../controllers/authControllers');
 
-
 const validators = require('../utils/middlewares/validators');
 
 const router = express.Router();

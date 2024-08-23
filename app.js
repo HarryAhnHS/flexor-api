@@ -12,6 +12,8 @@ const authRoutes = require("./routes/authRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 const postsRoutes = require("./routes/postsRoutes");
 const commentsRoutes = require("./routes/commentsRoutes");
+const realmsRoutes = require("./routes/realmsRoutes");
+const imagesRoutes = require("./routes/imagesRoutes");
 
 const app = express();
 app.use(express.json()); // For JSON payloads
@@ -34,10 +36,12 @@ app.use((req, res, next) => {
 // Public routes for login + signup
 app.use('/auth', authRoutes);
 
-// Private Routes
+// Authenticated Routes
 app.use('/users', passport.authenticate('jwt', { session: false }), usersRoutes);
 app.use('/posts', passport.authenticate('jwt', { session: false }), postsRoutes);
 app.use('/comments', passport.authenticate('jwt', { session: false }), commentsRoutes);
+app.use('/realms', passport.authenticate('jwt', { session: false }), realmsRoutes);
+app.use('/images', passport.authenticate('jwt', { session: false }), imagesRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
