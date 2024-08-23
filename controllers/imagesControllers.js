@@ -136,6 +136,25 @@ module.exports = {
             })
         } 
     },
+    uploadSocketImage: async (req, res) => {
+        const image = req.file;
+        try {
+            // Upload new image
+            const result = await cloudinary.uploader.upload(image.path, {
+                resource_type: 'auto',
+            });
+            // Remove local file after upload
+            fs.unlinkSync(image.path);
 
-
+            res.json({
+                message: "Image successfully uploaded use imageUrl",
+                imageUrl: result.secure_url,
+            })
+        }
+        catch (error) {
+            res.status(500).json({ 
+                error: error.message 
+            });
+        }
+    },
 }

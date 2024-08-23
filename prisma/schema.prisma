@@ -28,7 +28,6 @@ model User {
   password       String
   bio            String?
 
-  // Profile picture
   profilePictureUrl String?
   profilePicturePublicId  String?
 
@@ -44,6 +43,10 @@ model User {
 
   joinedRealms   JoinRealm[] @relation("JoiningRealm")
   createdRealms  Realm[]     @relation("RealmCreatedBy")
+
+  // Messaging
+  sent           Message[]   @relation("SentMessages")
+  received       Message[]   @relation("ReceivedMessages") 
 }
 
 model Follow {
@@ -154,4 +157,17 @@ model CommentLike {
   @@unique([userId, commentId]) // Ensures a user can like a comment only once
   @@index([userId])
   @@index([commentId])
+}
+
+
+// Socket
+model Message {
+  id          Int      @id @default(autoincrement())
+  senderId    String
+  receiverId  String
+  imageUrl    String?
+  content     String?
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  createdAt   DateTime @default(now())
 }

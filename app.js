@@ -1,5 +1,8 @@
 require("dotenv").config();
 
+const http = require('http');
+const socketIO = require('socket.io');
+
 const passport = require('passport');
 const express = require("express");
 
@@ -14,7 +17,13 @@ const commentsRoutes = require("./routes/commentsRoutes");
 const realmsRoutes = require("./routes/realmsRoutes");
 const imagesRoutes = require("./routes/imagesRoutes");
 
+// Initialize express
 const app = express();
+const server = http.createServer(app);
+
+// Initialize Socket.IO
+const io = require('./utils/middlewares/socket')(server);
+
 app.use(express.json()); // For JSON payloads
 app.use(express.urlencoded({ extended: true })); // For application/x-www-form-urlencoded form-data
 

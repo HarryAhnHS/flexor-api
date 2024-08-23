@@ -16,4 +16,7 @@ router.post('/profile-picture', upload.single('profilePhoto'), imagesControllers
 // User who created realm to upload + update profile photo for realm - requires a realmId as req body
 router.post('/:id/realm-picture', isAuthorized("realm"), upload.single('realmProfilePhoto'), imagesControllers.updateRealmPicture);
 
+// Endpoint for sender user to upload images for socket
+router.post('/:id/socket/upload', isAuthorized("user"), upload.single('socketImage'), imagesControllers.uploadSocketImage);
+
 module.exports = router;
