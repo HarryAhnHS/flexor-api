@@ -1,3 +1,4 @@
+
 const { PrismaClient } = require("@prisma/client");
 
 // Set database based on test or development node_env
@@ -24,24 +25,79 @@ module.exports = {
             throw new Error("Error getting all realms");
         }
     },
-    // getRealm: async (id) => {
-    //     try {
-    //         const realm = await prisma.realm.findUnique({
-    //             where: {
-    //                 id
-    //             },
-    //             include: {
-    //                 creator,
-    //                 _count:
-    //             }
-    //         });
-    //         return realm;
-    //     }
-    //     catch(error) {
-    //         console.error("Error getting realm", error);
-    //         throw new Error("Error getting realm");
-    //     }
-    // },
+    createRealm: async (creatorId, name, description) => {
+        try {
+            const realm = await prisma.realm.create({
+                data: {
+                    creatorId,
+                    name,
+                    description,
+                    realmPictureUrl: process.env.DEFAULT_REALM_PICTURE_URL,
+                    realmPicturePublicId: process.env.DEFAULT_REALM_PICTURE_PUBLIC_ID
+                }
+            })
+            return realm;
+        }
+        catch(error) {
+            console.error("Error getting all realms", error);
+            throw new Error("Error getting all realms");
+        }
+    },
+    updateRealm: async (id, name, description) => {
+        try {
+            const updatedRealm =  await prisma.realm.update({
+                where: { 
+                    id
+                 },
+                data: {
+                    name,
+                    description
+                },
+            });
+            return updatedRealm;
+        }
+        catch(error) {
+            console.error('Error updating realm', error);
+            throw new Error('Error updating realm');
+        }
+    },
+    deleteRealm: async (id) => {
+        try {
+            const deletedRealm =  await prisma.realm.delete({
+                where: { 
+                    id
+                },
+            });
+            return deletedRealm;
+        }
+        catch(error) {
+            console.error('Error deleting realm', error);
+            throw new Error('Error deleting realm');
+        }
+    },
+    getRealm: async (id) => {
+        try {
+            const realm = await prisma.realm.findUnique({
+                where: {
+                    id
+                },
+                include: {
+                    creator,
+                    _count: {
+                        select: {
+                            posts: true,
+                            joined: true,
+                        }
+                    }
+                }
+            });
+            return realm;
+        }
+        catch(error) {
+            console.error("Error getting realm", error);
+            throw new Error("Error getting realm");
+        }
+    },
     getRealmPicturePublicId: async (id) => {
         try {
             const realm = await prisma.realm.findUnique({

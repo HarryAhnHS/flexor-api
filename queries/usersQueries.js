@@ -236,6 +236,33 @@ module.exports = {
             throw new Error("Error getting users who liked comment");
         }
     },
+    getRealmJoiners: async (realmId) => {
+        try {
+            const users = await prisma.user.findMany({
+            where: { 
+                joinedRealms: {
+                    some: {
+                        realmId
+                    }
+                }
+            },
+            include: {
+                _count: {
+                    select: {
+                        posts: true,
+                        followers: true,
+                        following: true,
+                    }
+                }
+            }
+            });
+            return users;
+        }
+        catch(error) {
+            console.error("Error getting realm's joined users", error);
+            throw new Error("Error getting realm's joined users");
+        }
+    },
     getUserProfilePicturePublicId: async (id) => {
         try {
             const user = await prisma.user.findUnique({

@@ -72,7 +72,6 @@ module.exports = {
     updatePost: async (req, res) => {
         const { id } = req.params;
         const { realmId, title, text, published } = req.body;
-        const images = req.files;  // New images
         const removeImages = JSON.parse(req.body.removeImages || '[]');  // Image IDs to remove
 
         try {
@@ -87,7 +86,7 @@ module.exports = {
             // Update post in the database
             const updatedPost = await postsQueries.updatePost(id, updatedPostData);
 
-            // Handle image removals using axios to call image router
+            // Handle image removals using axios to call image delete route
             if (removeImages.length > 0) {
                 for (const imageId of removeImages) {
                     await axios.delete(`/images/${imageId}`);

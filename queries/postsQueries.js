@@ -145,6 +145,32 @@ module.exports = {
             throw new Error("Error getting users commented posts");
         }
     },
+    getRealmPosts: async (realmId) => {
+        try {
+            const posts = await prisma.post.findMany({
+                where: { 
+                    realmId,
+                    published: true
+                },
+                include: {
+                    realm: true,
+                    images: true,
+                    author: true,
+                    _count: {
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
+                    },
+                }
+            })
+            return posts;
+        }
+        catch(error) {
+            console.error("Error getting realms posts", error);
+            throw new Error("Error getting realms posts");
+        }
+    },
     getPost: async (id) => {
         try {
             const post = await prisma.post.findUnique({

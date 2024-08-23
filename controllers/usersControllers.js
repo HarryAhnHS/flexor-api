@@ -4,7 +4,6 @@ const fs = require('fs');
 const usersQueries = require('../queries/usersQueries');
 const followsQueries = require('../queries/followsQueries');
 const postsQueries = require('../queries/postsQueries');
-const likesQueries = require('../queries/likesQueries');
 
 module.exports = {
     getAllUsers: async(req, res) => {

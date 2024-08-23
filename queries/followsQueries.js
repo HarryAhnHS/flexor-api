@@ -19,8 +19,8 @@ module.exports = {
         try {
             const follow = await prisma.follow.create({
                 data: {
-                  followerId: followerId,
-                  followingId: followingId,
+                  followerId,
+                  followingId,
                 },
             });
             return follow;
@@ -36,8 +36,8 @@ module.exports = {
             const unfollow = await prisma.follow.delete({
                 where: {
                   followerId_followingId: {
-                    followerId: followerId,
-                    followingId: followingId,
+                    followerId,
+                    followingId,
                   },
                 },
               });
