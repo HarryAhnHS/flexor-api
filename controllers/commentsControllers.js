@@ -6,7 +6,7 @@ module.exports = {
     getAllComments: async (req, res) => {
         try {
             const comments = await commentsQueries.getAllComments();
-            res.status(201).json({
+            res.status(200).json({
                 comments
             })
         }
@@ -20,7 +20,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const comment = await commentsQueries.getComment(id);
-            res.status(201).json({
+            res.status(200).json({
                 comment
             })
         }
@@ -35,7 +35,7 @@ module.exports = {
         const commentContent = req.body.comment;
         try {
             const comment = await commentsQueries.updateCommentContent(id, commentContent);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Succesfully updated comment",
                 comment
             })
@@ -50,7 +50,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const comment = await commentsQueries.deleteComment(id);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Successfully deleted comment",
                 comment
             })
@@ -65,7 +65,7 @@ module.exports = {
         const commentId = req.params.id;
         try {
             const users = await usersQueries.getUsersWhoLikedComment(commentId);
-            res.status(201).json({
+            res.status(200).json({
                 users
             })
 
@@ -80,7 +80,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const nestedComments = await commentsQueries.getNestedComments(id);
-            res.status(201).json({
+            res.status(200).json({
                 nestedComments
             })
         }
@@ -128,7 +128,7 @@ module.exports = {
         const commentId = req.params.id;
         try {
             const commentLike = await commentLikesQueries.removeCommentLike(userId, commentId);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Successfully removed a comment",
                 commentLike
             })

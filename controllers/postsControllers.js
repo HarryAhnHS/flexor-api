@@ -9,7 +9,7 @@ module.exports = {
         try {
             const posts = await postsQueries.getAllPosts();
             // Respond with the created post
-            res.status(201).json({
+            res.status(200).json({
                 posts
             });
         }
@@ -30,7 +30,7 @@ module.exports = {
             // Get posts from user and realm Ids
             const feedPosts = await postsQueries.getFeed(followingUserIds, joinedRealmIds, parseInt(page), parseInt(pageSize));
             
-            res.status(201).json({
+            res.status(200).json({
                 feedPosts
             })
         }
@@ -44,7 +44,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const post = await postsQueries.getPost(id);
-            res.status(201).json({
+            res.status(200).json({
                 post
             })
         }
@@ -113,7 +113,7 @@ module.exports = {
             }
 
             // Respond with the updated post
-            res.status(201).json({
+            res.status(200).json({
                 message: "Succesfully updated post",
                 updatedPost
             });
@@ -128,7 +128,7 @@ module.exports = {
         try {
             const post = await postsQueries.deletePost(id);
             // Respond with the created post
-            res.status(201).json({
+            res.status(200).json({
                 message: "Succesfully deleted post",
                 post
             });
@@ -144,7 +144,7 @@ module.exports = {
         try {
             const usersWhoLikedPost = await usersQueries.getUsersWhoLikedPost(id);
             // Respond with the created post
-            res.status(201).json({
+            res.status(200).json({
                 usersWhoLikedPost
             });
         }
@@ -175,7 +175,7 @@ module.exports = {
         const postId = req.params.id;
         try {
             const like = await likesQueries.removeLike(userId, postId);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Successfully removed like from post",
                 like
             })
@@ -212,6 +212,7 @@ module.exports = {
         try {
             const nestedComment = await commentsQueries.addNestedComment(id);
             res.status(201).json({
+                message: "successfully added a nested comment",
                 nestedComment
             })
         }

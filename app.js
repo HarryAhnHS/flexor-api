@@ -5,6 +5,7 @@ const socketIO = require('socket.io');
 
 const passport = require('passport');
 const express = require("express");
+const cors = require("cors");
 
 const sessionMiddleware = require("./utils/configs/session-config");
 const passportConfig = require("./utils/configs/passport-config");
@@ -23,6 +24,18 @@ const server = http.createServer(app);
 
 // Initialize Socket.IO
 const io = require('./utils/middlewares/socket')(server);
+
+// Frontend URL
+const FRONTEND_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'NEEDTOCHANGE'
+    : 'http://localhost:5173';
+
+// Configure CORS
+app.use(cors({
+    origin: FRONTEND_URL, // Allow requests from this origin
+    credentials: true, // Allow credentials
+  }));
 
 app.use(express.json()); // For JSON payloads
 app.use(express.urlencoded({ extended: true })); // For application/x-www-form-urlencoded form-data

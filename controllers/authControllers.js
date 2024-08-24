@@ -41,7 +41,7 @@ module.exports = {
 
         // Create jwt token 
         jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '1h'}, (err, token) => {
-            res.json({token})
+            res.status(200).json({token})
         })
     },
 }

@@ -7,7 +7,7 @@ module.exports = {
         try {
             const realms = await realmsQueries.getAllRealms();
             // Respond with the created post
-            res.status(201).json({
+            res.status(200).json({
                 realms
             });
         }
@@ -23,6 +23,7 @@ module.exports = {
         try {
             const realm = await realmsQueries.createRealm(creatorId, name, description);
             res.status(201).json({
+                message: "Successfully created realm",
                 realm
             })
         }
@@ -37,7 +38,7 @@ module.exports = {
         const { name, description } = req.body;
         try {
             const realm = await realmsQueries.updateRealm(realmId, name, description);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Realm updated successfully",
                 realm
             })
@@ -52,7 +53,7 @@ module.exports = {
         const realmId = req.params.id;
         try {
             const realm = await realmsQueries.deleteRealm(realmId);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Realm deleted successfully",
                 realm
             })
@@ -68,7 +69,7 @@ module.exports = {
         try {
             const realm = await realmsQueries.getRealm(id);
             // Respond with the created post
-            res.status(201).json({
+            res.status(200).json({
                 realm
             });
         }
@@ -82,7 +83,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const posts = await postsQueries.getRealmPosts(id);
-            res.status(201).json({
+            res.status(200).json({
                 posts
             })
         }
@@ -96,7 +97,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const users = await usersQueries.getRealmJoiners(id);
-            res.status(201).json({
+            res.status(200).json({
                 users
             })
         }
@@ -127,7 +128,7 @@ module.exports = {
         const realmId = req.params.id;
         try{
             const join = await joinRealmsQueries.leaveRealm(userId, realmId);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Succesfully left realm",
                 join
             })

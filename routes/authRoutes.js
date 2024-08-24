@@ -1,14 +1,19 @@
 const express = require('express');
 const passport = require('passport');
 
-const controllers = require('../controllers/authControllers');
+const authControllers = require('../controllers/authControllers');
 
 const validators = require('../utils/middlewares/validators');
 
 const router = express.Router();
 
-router.post('/signup', [validators.validateSignUp, controllers.signUpPost])
+// Route to check if the user is authenticated
+router.get('/check', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.json({ isAuthenticated: true });
+});
 
-router.post('/login', controllers.logInPost);
+router.post('/signup', [validators.validateSignUp, authControllers.signUpPost])
+
+router.post('/login', authControllers.logInPost);
 
 module.exports = router;

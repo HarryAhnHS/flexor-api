@@ -7,7 +7,7 @@ module.exports = {
     getAllUsers: async(req, res) => {
         try {
             const users = await usersQueries.getAllUsers();
-            res.status(201).json({
+            res.status(200).json({
                 users
             })
         }
@@ -22,7 +22,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const user = await usersQueries.getUser("id", id)
-            res.status(201).json({
+            res.status(200).json({
                 user
             })
         }
@@ -37,7 +37,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const posts = await postsQueries.getUserPosts(id);
-            res.status(201).json({
+            res.status(200).json({
                 posts
             })
 
@@ -52,7 +52,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const drafts = await postsQueries.getUserDrafts(id);
-            res.status(201).json({
+            res.status(200).json({
                 drafts
             })
         }
@@ -66,7 +66,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const likedPosts = await postsQueries.getUserLikedPosts(id);
-            res.status(201).json({
+            res.status(200).json({
                 likedPosts
             })
 
@@ -81,7 +81,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const commentedPosts = await postsQueries.getUserCommentedPosts(id);
-            res.status(201).json({
+            res.status(200).json({
                 commentedPosts
             })
 
@@ -96,7 +96,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const followerUsers = await usersQueries.getUserFollowers(id);
-            res.status(201).json({
+            res.status(200).json({
                 followerUsers
             })
         }
@@ -110,7 +110,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const followingUsers = await usersQueries.getUserFollowing(id);
-            res.status(201).json({
+            res.status(200).json({
                 followingUsers
             })
         }
@@ -124,7 +124,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const realms = await realmsQueries.getUserJoinedRealms(id);
-            res.status(201).json({
+            res.status(200).json({
                 realms
             })
         }
@@ -138,7 +138,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const realms = await realmsQueries.getUserCreatedRealms(id);
-            res.status(201).json({
+            res.status(200).json({
                 realms
             })
         }
@@ -159,7 +159,7 @@ module.exports = {
         try {
             const updatedUser = await usersQueries.updateUser(id, updateData);
     
-            res.status(201).json({
+            res.status(200).json({
                 message: "Succesfully updated user details",
                 user: updatedUser
             })
@@ -174,7 +174,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const user = await usersQueries.deleteUser(id);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Succesfully deleted user",
                 user
             })
@@ -206,7 +206,7 @@ module.exports = {
         const followingId = req.params.id;
         try{
             const unfollow = await followsQueries.removeFollow(followerId, followingId);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Succesfully unfollowed user",
                 unfollow
             })
