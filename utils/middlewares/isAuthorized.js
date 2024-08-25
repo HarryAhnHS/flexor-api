@@ -56,17 +56,11 @@ const isAuthorized = (resourceType) => {
         default:
           return res.status(400).json({ error: "Invalid resource type" });
       }
-
-      // If the resource is not found, return a 404
-      if (!resource) {
-        return res.status(404).json({ error: `${resourceType} not found` });
-      }
-
       // Proceed to the next middleware or route handler
       next();
     } catch (error) {
       console.error(`Error in authorization middleware: ${error.message}`);
-      res.status(500).json({ error: "Internal server error" });
+      return res.status(500).json({ error: "Internal server error" });
     }
   };
 };

@@ -10,7 +10,7 @@ module.exports = (passport) => {
     }, async (jwtPayload, done) => {
         try {
             // Find user by ID from JWT payload
-            const user = await userQueries.findUser("id", jwtPayload.id);
+            const user = await userQueries.existUser("id", jwtPayload.id);
             if (user) {
                 return done(null, user);
             } else {

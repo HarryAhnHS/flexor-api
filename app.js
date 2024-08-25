@@ -41,8 +41,8 @@ app.use(express.json()); // For JSON payloads
 app.use(express.urlencoded({ extended: true })); // For application/x-www-form-urlencoded form-data
 
 // Express Session + Passport for OAuth
-app.use(sessionMiddleware);
-app.use(passport.session());
+// app.use(sessionMiddleware);
+// app.use(passport.session());
 
 // Initialize Passport configuration
 passportConfig(passport);
@@ -63,6 +63,20 @@ app.use('/posts', passport.authenticate('jwt', { session: false }), postsRoutes)
 app.use('/comments', passport.authenticate('jwt', { session: false }), commentsRoutes);
 app.use('/realms', passport.authenticate('jwt', { session: false }), realmsRoutes);
 app.use('/images', passport.authenticate('jwt', { session: false }), imagesRoutes);
+
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error(err.stack); // Log the error stack to the console
+  
+    // Determine the status code
+    const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
+  
+    // Send JSON response with error details
+    res.status(statusCode).json({
+      success: false,
+      message: err.message || 'Internal Server Error'
+    });
+});  
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

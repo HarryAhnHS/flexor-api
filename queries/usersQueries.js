@@ -25,6 +25,19 @@ module.exports = {
             throw new Error('Error getting users');
         } 
     },
+    existUser: async (colName, query) => {
+        try {
+            const whereClause = { [colName]: query };
+            const users = await prisma.user.findUnique({
+                where: whereClause
+            });
+            return users;
+        }
+        catch (error) {
+            console.error('Could not find user:', error);
+            throw new Error('Error finding user');
+        }
+    },
     getUser: async (colName, query) => {
         try {
             const whereClause = { [colName]: query };
@@ -39,9 +52,7 @@ module.exports = {
                                 }
                             },
                             likes: true,
-                            comments: {
-                                distinct: ['postId']
-                            },
+                            comments: true,
                             followers: true,
                             following: true
                         }
@@ -82,24 +93,30 @@ module.exports = {
             throw new Error('Error adding user');
         }
     },
-    updateUser: async (id, updateData) => {
+    updateUser: async (id, username, bio) => {
+        console.log("Updating user query");
         try {
-            // Update password if exists in updateData
-            if (updateData.password) {
-                const hashedPassword = await new Promise((resolve, reject) => {
-                    bcrypt.hash(password, 10, (err, hashedPassword) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        resolve(hashedPassword);
-                    });
-                });
-                updateData.password = hashedPassword;
-            };
-    
             const updatedUser =  await prisma.user.update({
                 where: { id },
-                data: updateData,
+                data: {
+                    username,
+                    bio
+                },
+                include: {
+                    _count: {
+                        select: {
+                            posts: {
+                                where: {
+                                    published: true
+                                }
+                            },
+                            likes: true,
+                            comments: true,
+                            followers: true,
+                            following: true
+                        }
+                    }
+                }
             });
             return updatedUser;
         }

@@ -36,6 +36,9 @@ router.get('/:id/joined', usersControllers.getUserJoinedRealms);
 // Get specific user created realms
 router.get('/:id/created', isAuthorized("user"), usersControllers.getUserCreatedRealms);
 
+// Update a user
+router.put('/:id', isAuthorized("user"), usersControllers.updateUser);
+
 // Delete a user
 router.delete('/:id', isAuthorized("user"), usersControllers.deleteUser);
 

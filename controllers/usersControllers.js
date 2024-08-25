@@ -2,6 +2,7 @@ const usersQueries = require('../queries/usersQueries');
 const followsQueries = require('../queries/followsQueries');
 const postsQueries = require('../queries/postsQueries');
 const realmsQueries = require('../queries/realmsQueries');
+const { validationResult } = require('express-validator');
 
 module.exports = {
     getAllUsers: async(req, res) => {
@@ -150,21 +151,24 @@ module.exports = {
     },
     updateUser: async (req, res) => {
         const { id } = req.params;
-        // Create updated data object to handle optional fields
-        var updateData = {};
-        if (email) updateData.email = email;
-        if (username) updateData.username = username;
-        if (password) updateData.password = password; // Password needs hashing
-        if (bio) updateData.bio = bio;
+        const { username, bio } = req.body;
         try {
-            const updatedUser = await usersQueries.updateUser(id, updateData);
-    
+            // If an existing user with the same username is found, and it's not the same user return error
+            const existingUser = await usersQueries.existUser("username", username);
+            if (existingUser && existingUser.id !== id) {
+                return res.status(400).json({
+                    error: 'Username is already taken'
+                });
+            }
+
+            const updatedUser = await usersQueries.updateUser(id, username, bio);
             res.status(200).json({
                 message: "Succesfully updated user details",
                 user: updatedUser
             })
         }
         catch(error) {
+            console.error("errors caught by controller", error);
             res.status(500).json({
                 error: error.message
             })

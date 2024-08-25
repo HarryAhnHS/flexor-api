@@ -30,7 +30,7 @@ module.exports = {
         const { username, password } = req.body;
 
         // Verify user login
-        const user  = await userQueries.findUser("username", username);
+        const user  = await userQueries.existUser("username", username);
         if (!user) return res.status(401).json({
             message: 'Username not found'
         });

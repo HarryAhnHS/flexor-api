@@ -10,7 +10,7 @@ const validateSignUp = [
         .isEmail().withMessage('Invalid email address')
         .custom(async value => {
             // Check if email already exists in the database
-            const user = await userQueries.findUser('email', value);
+            const user = await userQueries.existUser('email', value);
             if (user) {
                 throw new Error('Email already in use');
             }
@@ -24,7 +24,7 @@ const validateSignUp = [
         .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')
         .isAlphanumeric().withMessage('Username must contain only letters and numbers')
         .custom(async value => {
-            const user =  await userQueries.findUser("username", value);
+            const user =  await userQueries.existUser("username", value);
             if (user) {
                 throw new Error('Username already in use');
             }
