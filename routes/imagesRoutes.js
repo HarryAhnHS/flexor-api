@@ -11,10 +11,10 @@ router.post('/', upload.array('image', 10), imagesControllers.uploadPostImages);
 router.delete('/:id', isAuthorized("image"), imagesControllers.deletePostImage);
 
 // Logged user to upload + update profile photo url and public id for themselves
-router.post('/profile-picture', upload.single('profilePhoto'), imagesControllers.updateUserProfilePicture);
+router.put('/profile-picture', upload.single('profilePhoto'), imagesControllers.updateUserProfilePicture);
 
 // User who created realm to upload + update profile photo for realm - requires a realmId as req body
-router.post('/:id/realm-picture', isAuthorized("realm"), upload.single('realmProfilePhoto'), imagesControllers.updateRealmPicture);
+router.put('/:id/realm-picture', isAuthorized("realm"), upload.single('realmProfilePhoto'), imagesControllers.updateRealmPicture);
 
 // Endpoint for sender user to upload images for socket
 router.post('/:id/socket/upload', isAuthorized("user"), upload.single('socketImage'), imagesControllers.uploadSocketImage);

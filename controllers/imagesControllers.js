@@ -1,6 +1,8 @@
 const imagesQueries = require("../queries/imagesQueries");
 const realmsQueries = require("../queries/realmsQueries");
 const usersQueries = require("../queries/usersQueries");
+const cloudinary = require("../utils/configs/cloudinary-config");
+const fs = require('fs');
 
 module.exports = {
     uploadPostImages: async (req, res) => {
@@ -96,6 +98,7 @@ module.exports = {
             fs.unlinkSync(image.path);
         } 
         catch (error) {
+            console.error(error);
             res.status(500).json({
                 error: error.message
             })
