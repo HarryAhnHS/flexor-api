@@ -21,6 +21,13 @@ module.exports = {
         const creatorId = req.user.id;
         const { name, description } = req.body;
         try {
+            // If an existing realm with the same name is found return error
+            const existingRealm = await realmsQueries.existRealm("name", req.body.name);
+            if (existingRealm) {
+                return res.status(400).json({
+                    error: 'Realm name is already taken'
+                });
+            }
             const realm = await realmsQueries.createRealm(creatorId, name, description);
             res.status(201).json({
                 message: "Successfully created realm",
@@ -37,6 +44,14 @@ module.exports = {
         const realmId = req.params.id;
         const { name, description } = req.body;
         try {
+            // If an existing realm with the same name is found return error
+            const existingRealm = await realmsQueries.existRealm("name", req.body.name);
+            if (existingRealm && existingRealm.id !== realmId) {
+                return res.status(400).json({
+                    error: 'Realm name is already taken'
+                });
+            }
+
             const realm = await realmsQueries.updateRealm(realmId, name, description);
             res.status(200).json({
                 message: "Realm updated successfully",

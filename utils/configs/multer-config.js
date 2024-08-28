@@ -26,7 +26,7 @@ const fileFilter = (req, file, cb) => {
   if (allowedMimes.includes(file.mimetype)) {
     cb(null, true); // Accept the file
   } else {
-    cb(new Error('Invalid file type. Only PNG, JPEG, and GIF files are allowed.'), false); // Reject the file
+    cb(new Error('Invalid file type'), false); // Reject the file
   }
 };
 

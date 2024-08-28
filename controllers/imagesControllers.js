@@ -5,36 +5,29 @@ const cloudinary = require("../utils/configs/cloudinary-config");
 const fs = require('fs');
 
 module.exports = {
-    uploadPostImages: async (req, res) => {
+    uploadPostImage: async (req, res) => {
         const ownerId = req.user.id;
-        const images = req.files;
-        const postId = req.body.postId; // Get postId from req body
+        const image = req.file;
+        const postId = req.params.id;
         try {
-            // Handle images uploads if any
-            if (images && images.length > 0) {
-                const imageData = [];
-                // For each file in uploaded images array, upload each file and push data into Image table
-                for (const image of images) {
-                    const result = await cloudinary.uploader.upload(image.path, {
-                    resource_type: 'auto',
-                    });
+            const result = await cloudinary.uploader.upload(image.path, {
+            resource_type: 'auto',
+            });
+
+            imageData = ({
+                ownerId: ownerId,
+                url: result.secure_url, // Cloudinary URL
+                postId: postId,
+                publicId: result.public_id,  // Store the public ID for future deletion
+            });
             
-                    imageData.push({
-                        ownerId: ownerId,
-                        url: result.secure_url, // Cloudinary URL
-                        postId: postId,
-                        publicId: result.public_id,  // Store the public ID for future deletion
-                    });
-            
-                    // Remove local file after upload
-                    fs.unlinkSync(image.path);
-                }
-                const uploadedImages = await imagesQueries.uploadImages(imageData);
-                res.status(201).json({
-                    message: "Successfully uploaded images",
-                    uploadedImages
-                });
-            }
+            const uploadedImage = await imagesQueries.uploadImage(imageData);
+            res.status(201).json({
+                message: "Successfully uploaded images",
+                imageUrl: uploadedImage.url
+            });
+            // Remove local file after upload
+            fs.unlinkSync(image.path);
         }   
         catch(error) {
             res.status(500).json({

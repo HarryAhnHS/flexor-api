@@ -244,7 +244,7 @@ module.exports = {
             throw new Error("Error getting post");
         }
     },
-    createPost: async (postData) => {
+    initPost: async (postData) => {
         try {
             const post = await prisma.post.create({
                 data: postData
@@ -258,7 +258,7 @@ module.exports = {
     },
     updatePost: async (id, updatedPostData) => {
         try {
-            const post = prisma.post.update({
+            const post = await prisma.post.update({
                 where: { id },
                 data: updatedPostData,
             })
@@ -271,7 +271,7 @@ module.exports = {
     },
     deletePost: async (id) => {
         try {
-            const post = prisma.post.delete({
+            const post = await prisma.post.delete({
                 where: { id },
             })
             return post;

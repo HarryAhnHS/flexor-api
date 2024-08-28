@@ -28,10 +28,10 @@ module.exports = {
     existUser: async (colName, query) => {
         try {
             const whereClause = { [colName]: query };
-            const users = await prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
                 where: whereClause
             });
-            return users;
+            return user;
         }
         catch (error) {
             console.error('Could not find user:', error);

@@ -3,6 +3,7 @@ const likesQueries = require('../queries/likesQueries');
 const commentsQueries = require('../queries/commentsQueries');
 const usersQueries = require("../queries/usersQueries");
 const realmsQueries = require("../queries/realmsQueries");
+const { initialize } = require("passport");
 
 module.exports = {
     getAllPosts: async (req, res) => {
@@ -54,27 +55,17 @@ module.exports = {
             })
         }
     },
-    createPost: async (req, res) => {
-        // Create a new Post and handle both posts (published = true) and saves as draft
-        // Realm, title, text + optional medias
+    initPost: async (req, res) => {
         const { id } = req.user;
-        const { realmId, title, text, published } = req.body;
-        const images = req.files;
         try {
-            // Validate required fields for published posts
-            if (published && (!realmId || !title)) {
-                return res.status(400).json({ error: 'Realm ID and title are required for published posts.' });
-            }
-
             const postData = {
-                title,
-                text: text || '',
-                published: published || false,
-                realmId: realmId || null,  // Realm ID can be null for drafts
+                title: '',
+                text:  '',
+                published: false,
                 authorId: id,  // Set the author as the user who created the post
             }
             // Create a new post
-            const post = await postsQueries.createPost(postData);
+            const post = await postsQueries.initPost(postData);
 
             // Respond with the created post
             res.status(201).json({
@@ -96,7 +87,7 @@ module.exports = {
         try {
             // Update post data
             const updatedPostData = {
-                realmId,
+                realmId: realmId || null,
                 title,
                 text,
                 published,

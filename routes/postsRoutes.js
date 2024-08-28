@@ -23,8 +23,8 @@ router.put('/:id', isAuthorized("post"), postsControllers.updatePost);
 // Delete a post
 router.delete('/:id', isAuthorized("post"), postsControllers.deletePost);
 
-// Logged user to create a new post or draft (published or not)
-router.post('/', upload.array('image', 10), postsControllers.createPost);
+// Logged user to initialize a new blank unpublished post
+router.post('/', postsControllers.initPost);
 
 // Logged user to like a post
 router.post('/:id/like', postsControllers.loggedUserLike);

@@ -91,10 +91,10 @@ model Post {
   updatedAt      DateTime    @updatedAt
   published      Boolean
 
-  realm          Realm       @relation(fields: [realmId], references: [id])
-  realmId        String
+  realm          Realm?       @relation(fields: [realmId], references: [id])
+  realmId        String?
 
-  title          String
+  title          String?
   text           String?
   images         Image[]
 

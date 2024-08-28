@@ -14,15 +14,16 @@ const prisma = new PrismaClient({
 });
 
 module.exports = {
-    uploadImages: async (imageData) => {
+    uploadImage: async (imageData) => {
         try {
-            await prisma.image.createMany({
+            const image = await prisma.image.create({
                 data: imageData,
             });
+            return image;
         }
         catch (error) {
-            console.error("Error adding images", error);
-            throw new Error("Error adding images");
+            console.error("Error adding image", error);
+            throw new Error("Error adding image");
         }
     },
     getImage: async (id) => {

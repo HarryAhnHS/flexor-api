@@ -176,6 +176,18 @@ module.exports = {
             console.error("Error updating realm picture", error);
             throw new Error("Error updating realm picture");
         }
+    },
+    existRealm: async (colName, value) => {
+        try {
+            const whereClause = { [colName]: value };
+            const realm = await prisma.realm.findUnique({
+                where: whereClause,
+            });
+            return realm;
+        }
+        catch(error) {
+            console.error("Error getting realm existing", error);
+            throw new Error("Error getting realm existing");
+        }
     }
-
 }
