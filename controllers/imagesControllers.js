@@ -8,16 +8,16 @@ module.exports = {
     uploadPostImage: async (req, res) => {
         const ownerId = req.user.id;
         const image = req.file;
-        const postId = req.params.id;
+        const id = req.body.id;
         try {
             const result = await cloudinary.uploader.upload(image.path, {
             resource_type: 'auto',
             });
 
             imageData = ({
-                ownerId: ownerId,
+                id,
+                ownerId,
                 url: result.secure_url, // Cloudinary URL
-                postId: postId,
                 publicId: result.public_id,  // Store the public ID for future deletion
             });
             

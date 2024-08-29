@@ -6,9 +6,6 @@ const allowedMimes = [
   'image/png',
   'image/jpeg',
   'image/gif',
-  'image/webp',
-  'image/svg+xml',
-  'image/bmp'
 ];
 
 // Set up Multer for local file handling

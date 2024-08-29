@@ -4,10 +4,10 @@ const upload = require('../utils/configs/multer-config');
 const imagesControllers = require('../controllers/imagesControllers');
 const isAuthorized = require('../utils/middlewares/isAuthorized');
 
-// Logged user to upload images for posts - requires a postId as req param
-router.post('/:id', upload.single('image'), imagesControllers.uploadPostImage);
+// Logged user to upload images + generate imageId (uuid) from front-end
+router.post('/', upload.single('image'), imagesControllers.uploadPostImage);
 
-// User to delete post images
+// User to delete images with imageId
 router.delete('/:id', isAuthorized("image"), imagesControllers.deletePostImage);
 
 // Logged user to upload + update profile photo url and public id for themselves

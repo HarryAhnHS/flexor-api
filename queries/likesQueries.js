@@ -32,9 +32,11 @@ module.exports = {
     removeLike: async (userId, postId) => {
         try {
             const unlike = await prisma.like.delete({
-                userId_postId: {
-                    userId,
-                    postId,
+                where: {
+                    userId_postId: {
+                        userId,
+                        postId,
+                    }
                 }
             })
             return unlike;

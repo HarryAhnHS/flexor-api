@@ -16,7 +16,17 @@ const prisma = new PrismaClient({
 module.exports = {
     getAllRealms: async () => {
         try {
-            const realms = await prisma.realm.findMany({});
+            const realms = await prisma.realm.findMany({
+                include: {
+                    creator: true,
+                    _count: {
+                        select: {
+                            posts: true,
+                            joined: true,
+                        }
+                    }
+                }
+            });
             return realms;
         }
         catch(error) {

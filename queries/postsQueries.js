@@ -68,7 +68,7 @@ module.exports = {
         try {
             const posts = await prisma.post.findMany({
                 where: { 
-                    userId,
+                    authorId: userId,
                     published: true
                 },
                 include: {
@@ -94,7 +94,7 @@ module.exports = {
         try {
             const drafts = await prisma.post.findMany({
                 where: { 
-                    userId,
+                    authorId: userId,
                     published: false
                 },
                 include: {
@@ -221,7 +221,7 @@ module.exports = {
                     author: true,
                     comments: {
                         include: {
-                            user,
+                            user: true,
                             _count: {
                                 select: {
                                     nestedComments: true,
@@ -244,10 +244,11 @@ module.exports = {
             throw new Error("Error getting post");
         }
     },
-    initPost: async (postData) => {
+    createPost: async (postData, imageIds) => {
         try {
             const post = await prisma.post.create({
                 data: postData
+                
             })
             return post;
         }

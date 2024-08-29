@@ -54,7 +54,7 @@ module.exports = {
         try {
             const drafts = await postsQueries.getUserDrafts(id);
             res.status(200).json({
-                drafts
+                posts: drafts
             })
         }
         catch(error) {
@@ -66,9 +66,9 @@ module.exports = {
     getUserLikedPosts: async (req, res) => {
         const { id } = req.params;
         try {
-            const likedPosts = await postsQueries.getUserLikedPosts(id);
+            const posts = await postsQueries.getUserLikedPosts(id);
             res.status(200).json({
-                likedPosts
+                posts
             })
 
         }
@@ -81,9 +81,9 @@ module.exports = {
     getUserCommentedPosts: async (req, res) => {
         const { id } = req.params;
         try {
-            const commentedPosts = await postsQueries.getUserCommentedPosts(id);
+            const posts = await postsQueries.getUserCommentedPosts(id);
             res.status(200).json({
-                commentedPosts
+                posts
             })
 
         }

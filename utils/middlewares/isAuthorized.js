@@ -18,6 +18,8 @@ const isAuthorized = (resourceType) => {
             select: { authorId: true } // Select only the authorId
           });
           if (resource?.authorId !== userId) {
+            console.log(resource.authorId);
+            console.log(userId);
             return res.status(403).json({ error: "Unauthorized access" });
           }
           break;

@@ -3,7 +3,6 @@ const likesQueries = require('../queries/likesQueries');
 const commentsQueries = require('../queries/commentsQueries');
 const usersQueries = require("../queries/usersQueries");
 const realmsQueries = require("../queries/realmsQueries");
-const { initialize } = require("passport");
 
 module.exports = {
     getAllPosts: async (req, res) => {
@@ -55,17 +54,22 @@ module.exports = {
             })
         }
     },
-    initPost: async (req, res) => {
+    createPost: async (req, res) => {
         const { id } = req.user;
+        const { realmId, title, text, published, imageIds } = req.body;
+
         try {
             const postData = {
-                title: '',
-                text:  '',
-                published: false,
-                authorId: id,  // Set the author as the user who created the post
+                authorId: id, 
+                realmId,
+                title,
+                text,
+                published,
+                images: {
+                    connect: imageIds.map((id) => ({ id })),
+                },
             }
-            // Create a new post
-            const post = await postsQueries.initPost(postData);
+            const post = await postsQueries.createPost(postData, imageIds);
 
             // Respond with the created post
             res.status(201).json({
