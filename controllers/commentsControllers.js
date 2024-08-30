@@ -93,9 +93,9 @@ module.exports = {
     addNestedComment: async (req, res) => {
         const userId = req.user.id; // Assuming user is authenticated and their ID is stored in req.user
         const parentId  = req.params.id; // Get the parent comment ID from the URL
-        const { postId, commentContent } = req.body; // Get postId and comment content from the request body
+        const { postId, comment } = req.body; // Get postId and comment content from the request body
         try {
-            const nestedComment = await commentsQueries.addNestedComment(userId, postId, commentContent, parentId);
+            const nestedComment = await commentsQueries.addNestedComment(userId, postId, comment, parentId);
             res.status(201).json({
                 message: "Successfully created nested comment",
                 nestedComment

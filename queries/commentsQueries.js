@@ -26,7 +26,21 @@ module.exports = {
     },
     getComment: async (id) => {
         try {
-            const comment = await prisma.comment.findUnique({});
+            const comment = await prisma.comment.findUnique({
+                where: {
+                    id
+                },
+                include: {
+                    user: true,
+                    nestedComments: true,
+                    _count: {
+                        select: {
+                            likes: true,
+                            nestedComments: true,
+                        }
+                    }
+                }
+            });
             return comment;
         }
         catch(error) {
@@ -97,10 +111,10 @@ module.exports = {
                     parentId: id
                 },
                 include: {
-                    user,
+                    user: true,
                     _count: {
                         select: {
-                            likes
+                            likes: true
                         }
                     }
                 },

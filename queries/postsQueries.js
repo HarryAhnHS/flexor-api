@@ -220,6 +220,9 @@ module.exports = {
                     images: true,
                     author: true,
                     comments: {
+                        where: {
+                            parentId: null,
+                        },
                         include: {
                             user: true,
                             _count: {
