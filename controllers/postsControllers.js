@@ -69,7 +69,7 @@ module.exports = {
                     connect: imageIds.map((id) => ({ id })),
                 },
             }
-            const post = await postsQueries.createPost(postData, imageIds);
+            const post = await postsQueries.createPost(postData);
 
             // Respond with the created post
             res.status(201).json({
@@ -85,7 +85,7 @@ module.exports = {
     },
     updatePost: async (req, res) => {
         const { id } = req.params;
-        const { realmId, title, text, published } = req.body;
+        const { realmId, title, text, published, imageIds } = req.body;
         const removeImages = JSON.parse(req.body.removeImages || '[]');  // Image IDs to remove
 
         try {
@@ -95,6 +95,9 @@ module.exports = {
                 title,
                 text,
                 published,
+                images: {
+                    connect: imageIds.map((id) => ({ id })),
+                },
             };
 
             // Update post in the database
@@ -200,15 +203,13 @@ module.exports = {
             })
         }
     },
-    loggedUserAddNestedComment: async (req, res) => {
-        const userId = req.user.id;
+    getPostCommentCount: async (req, res) => {
         const postId = req.params.id;
-        const commentContent = req.body.comment;
         try {
-            const nestedComment = await commentsQueries.addNestedComment(id);
+            const count = await commentsQueries.getPostCommentCount(postId);
             res.status(201).json({
-                message: "successfully added a nested comment",
-                nestedComment
+                message: "successfully got comment count",
+                count
             })
         }
         catch(error) {
@@ -216,5 +217,5 @@ module.exports = {
                 message: error.message
             })
         }
-    },
+    }
 }

@@ -35,4 +35,7 @@ router.delete('/:id/like', postsControllers.loggedUserUnlike);
 // Logged user to add a root comment to a post (req.body.comment)
 router.post('/:id/comment', postsControllers.loggedUserAddComment);
 
+// Get comment count under a post
+router.get('/:id/comments/count', postsControllers.getPostCommentCount)
+
 module.exports = router;

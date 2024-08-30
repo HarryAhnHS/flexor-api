@@ -64,11 +64,11 @@ module.exports = {
             throw new Error("Error getting feed");
         }
     },
-    getUserPosts: async (userId) => {
+    getUserPosts: async (authorId) => {
         try {
             const posts = await prisma.post.findMany({
                 where: { 
-                    authorId: userId,
+                    authorId,
                     published: true
                 },
                 include: {
@@ -90,11 +90,11 @@ module.exports = {
             throw new Error("Error getting users posts");
         }
     }, 
-    getUserDrafts: async (userId) => {
+    getUserDrafts: async (authorId) => {
         try {
             const drafts = await prisma.post.findMany({
                 where: { 
-                    authorId: userId,
+                    authorId,
                     published: false
                 },
                 include: {
@@ -149,7 +149,7 @@ module.exports = {
                         {
                             comments: {
                                 some: {
-                                    userId: userId,  // Root comments by the user
+                                    userId,
                                 },
                             },
                         },
@@ -244,11 +244,10 @@ module.exports = {
             throw new Error("Error getting post");
         }
     },
-    createPost: async (postData, imageIds) => {
+    createPost: async (postData) => {
         try {
             const post = await prisma.post.create({
                 data: postData
-                
             })
             return post;
         }

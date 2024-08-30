@@ -42,6 +42,15 @@ module.exports = {
                   userId,
                   postId,
                 },
+                include: {
+                    user: true,
+                    _count: {
+                        select: {
+                            nestedComments: true,
+                            likes: true
+                        }
+                    }
+                }
             });
             return comment;
         }
@@ -120,5 +129,23 @@ module.exports = {
             throw new Error("Error adding nested comment");
         }
     },
+    getPostCommentCount: async (postId) => {
+        try {
+            const count = await prisma.comment.count({
+                where: {
+                    postId,
+                    OR: [
+                        { parentId: null }, // Count main comments
+                        { parentId: { not: null } } // Count nested comments
+                    ]
+                }
+            });
+            return count;
+        } 
+        catch (error) {
+            console.error("Error adding nested comment", error);
+            throw new Error("Error adding nested comment");
+        }
+    }
 
 }
