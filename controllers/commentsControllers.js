@@ -98,7 +98,7 @@ module.exports = {
             const nestedComment = await commentsQueries.addNestedComment(userId, postId, comment, parentId);
             res.status(201).json({
                 message: "Successfully created nested comment",
-                nestedComment
+                comment: nestedComment
             })
         }
         catch(error) {

@@ -135,6 +135,15 @@ module.exports = {
                     postId,
                     parentId,
                 },
+                include: {
+                    user: true,
+                    _count: {
+                        select: {
+                            nestedComments: true,
+                            likes: true
+                        }
+                    }
+                }
             });
             return comment;
         } 
