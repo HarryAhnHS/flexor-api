@@ -71,17 +71,6 @@ module.exports = {
                     authorId,
                     published: true
                 },
-                include: {
-                    realm: true,
-                    images: true,
-                    author: true,
-                    _count: {
-                        select: {
-                            likes: true,
-                            comments: true,
-                        }
-                    },
-                }
             })
             return posts;
         }
@@ -97,11 +86,6 @@ module.exports = {
                     authorId,
                     published: false
                 },
-                include: {
-                    realm: true,
-                    images: true,
-                    author: true,
-                }
             })
             return drafts;
         }
@@ -121,17 +105,6 @@ module.exports = {
                         }
                     }
                 },
-                include: {
-                    realm: true,
-                    images: true,
-                    author: true,
-                    _count: {
-                        select: {
-                            likes: true,
-                            comments: true,
-                        }
-                    },
-                }
             })
             return likedPosts;
         }
@@ -166,17 +139,6 @@ module.exports = {
                         },
                     ],
                 },
-                include: {
-                    realm: true,
-                    images: true,
-                    author: true,
-                    _count: {
-                        select: {
-                            likes: true,
-                            comments: true,
-                        }
-                    },
-                }
             })
             return commentedPosts;
         }

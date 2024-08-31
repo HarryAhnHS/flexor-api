@@ -32,9 +32,11 @@ module.exports = {
     removeCommentLike: async (userId, commentId) => {
         try {
             const unlike = await prisma.commentLike.delete({
-                userId_commentId: {
-                    userId,
-                    commentId,
+                where: {
+                    userId_commentId: {
+                        userId,
+                        commentId,
+                    }
                 }
             })
             return unlike;
