@@ -1,5 +1,6 @@
 const commentLikesQueries = require("../queries/commentLikesQueries");
 const commentsQueries = require("../queries/commentsQueries");
+const notificationQueries = require("../queries/notificationQueries");
 const usersQueries = require("../queries/usersQueries");
 
 module.exports = {
@@ -100,6 +101,8 @@ module.exports = {
                 message: "Successfully created nested comment",
                 comment: nestedComment
             })
+            // Create Notification
+            notificationQueries.createCommentReplyNotification(comment.parent.userId, userId, postId);
         }
         catch(error) {
             res.status(500).json({
@@ -116,6 +119,8 @@ module.exports = {
                 message: "Successfully liked a comment",
                 commentLike
             })
+            // Create Notification
+            notificationQueries.createCommentLikeNotification(commentLike.comment.userId, userId, postId);
         }
         catch(error) {
             res.status(500).json({

@@ -44,6 +44,10 @@ model User {
   joinedRealms   JoinRealm[] @relation("JoiningRealm")
   createdRealms  Realm[]     @relation("RealmCreatedBy")
 
+  // Notifications
+  notifications   Notification[] @relation("Notification")
+  actedNotifications Notification[] @relation("Actor")
+
   // Messaging
   sent           Message[]   @relation("SentMessages")
   received       Message[]   @relation("ReceivedMessages") 
@@ -155,6 +159,19 @@ model CommentLike {
   @@unique([userId, commentId]) // Ensures a user can like a comment only once
   @@index([userId])
   @@index([commentId])
+}
+
+model Notification {
+  id         String     @id @default(uuid())
+  userId     String
+  user       User?       @relation("Notification", fields: [userId], references: [id])
+  actorId    String?
+  actor      User?       @relation("Actor", fields: [actorId], references: [id])
+  type       String?
+  sourceId   String?
+  createdAt  DateTime   @default(now())
+
+  @@index([userId])
 }
 
 

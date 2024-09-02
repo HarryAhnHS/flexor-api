@@ -2,7 +2,7 @@ const usersQueries = require('../queries/usersQueries');
 const followsQueries = require('../queries/followsQueries');
 const postsQueries = require('../queries/postsQueries');
 const realmsQueries = require('../queries/realmsQueries');
-const { validationResult } = require('express-validator');
+const notificationQueries = require('../queries/notificationQueries');
 
 module.exports = {
     getAllUsers: async(req, res) => {
@@ -198,6 +198,8 @@ module.exports = {
                 message: "Succesfully followed user",
                 follow
             })
+            // Create Notification
+            notificationQueries.createUserFollowNotification(followingId, followerId);
         }
         catch(error) {
             res.status(500).json({

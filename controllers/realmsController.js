@@ -2,6 +2,7 @@ const joinRealmsQueries = require("../queries/joinRealmsQueries");
 const realmsQueries = require("../queries/realmsQueries");
 const usersQueries = require("../queries/usersQueries");
 const postsQueries = require("../queries/postsQueries");
+const notificationQueries = require("../queries/notificationQueries");
 
 module.exports = {
     getAllRealms: async (req, res) => {
@@ -133,6 +134,8 @@ module.exports = {
                 message: "Succesfully joined realm",
                 join
             })
+            // Create Notification
+            notificationQueries.createRealmJoinNotification(join.realm.creatorId, userId, realmId);
         }
         catch(error) {
             res.status(500).json({

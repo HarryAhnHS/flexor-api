@@ -4,6 +4,7 @@ const commentsQueries = require('../queries/commentsQueries');
 const usersQueries = require("../queries/usersQueries");
 const realmsQueries = require("../queries/realmsQueries");
 const imagesQueries = require("../queries/imagesQueries");
+const notificationQueries = require("../queries/notificationQueries");
 
 module.exports = {
     getAllPosts: async (req, res) => {
@@ -153,6 +154,8 @@ module.exports = {
                 message: "Succesfully liked post",
                 like
             })
+            // Create Notification
+            notificationQueries.createPostLikeNotification(like.post.authorId,userId, postId);
         }
         catch(error) {
             res.status(500).json({
@@ -188,6 +191,8 @@ module.exports = {
                 message: "successfully created root comment to post",
                 comment
             });
+            // Create Notification
+            notificationQueries.createPostCommentNotification(comment.post.authorId, userId, postId);
         }
         catch(error) {
             res.status(500).json({

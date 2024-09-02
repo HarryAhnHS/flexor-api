@@ -22,6 +22,9 @@ module.exports = {
                   joinerId,
                   realmId,
                 },
+                include: {
+                    realm: true,
+                }
             });
             return join;
         }

@@ -58,6 +58,7 @@ module.exports = {
                 },
                 include: {
                     user: true,
+                    post: true,
                     _count: {
                         select: {
                             nestedComments: true,
@@ -146,6 +147,7 @@ module.exports = {
                 },
                 include: {
                     user: true,
+                    parent: true,
                     _count: {
                         select: {
                             nestedComments: true,

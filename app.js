@@ -1,7 +1,6 @@
 require("dotenv").config();
 
 const http = require('http');
-const socketIO = require('socket.io');
 
 const passport = require('passport');
 const express = require("express");

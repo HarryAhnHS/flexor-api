@@ -20,6 +20,9 @@ module.exports = {
                 data: {
                     userId,
                     commentId,
+                },
+                include: {
+                    comment: true,
                 }
             })
             return like;
