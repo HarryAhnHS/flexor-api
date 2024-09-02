@@ -102,7 +102,7 @@ module.exports = {
                 comment: nestedComment
             })
             // Create Notification
-            notificationQueries.createCommentReplyNotification(comment.parent.userId, userId, postId);
+            notificationQueries.createCommentReplyNotification(nestedComment.parent.userId, userId, parentId);
         }
         catch(error) {
             res.status(500).json({
@@ -120,7 +120,7 @@ module.exports = {
                 commentLike
             })
             // Create Notification
-            notificationQueries.createCommentLikeNotification(commentLike.comment.userId, userId, postId);
+            notificationQueries.createCommentLikeNotification(commentLike.comment.userId, userId, commentId);
         }
         catch(error) {
             res.status(500).json({

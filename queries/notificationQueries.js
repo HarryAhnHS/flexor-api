@@ -23,6 +23,9 @@ module.exports = ({
                     actorId,
                     type: 'follow',
                 },
+                include: {
+                    actor: true,
+                }
             });
 
             // Emit a socket event to the user's room
@@ -45,6 +48,9 @@ module.exports = ({
                     type: 'realm_join',
                     sourceId: realmId,
                 },
+                include: {
+                    actor: true,
+                }
             });
 
             // Emit a socket event to the user's room
@@ -67,6 +73,9 @@ module.exports = ({
                     type: 'post_like',
                     sourceId: postId,
                 },
+                include: {
+                    actor: true,
+                }
             });
 
             // Emit a socket event to the user's room
@@ -89,6 +98,9 @@ module.exports = ({
                     type: 'post_comment',
                     sourceId: postId,
                 },
+                include: {
+                    actor: true,
+                }
             });
 
             // Emit a socket event to the user's room
@@ -111,6 +123,9 @@ module.exports = ({
                     type: 'comment_like',
                     sourceId: commentId,
                 },
+                include: {
+                    actor: true,
+                }
             });
 
             // Emit a socket event to the user's room
@@ -133,6 +148,9 @@ module.exports = ({
                     type: 'comment_reply',
                     sourceId: commentId,
                 },
+                include: {
+                    actor: true,
+                }
             });
 
             // Emit a socket event to the user's room
