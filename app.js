@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const sessionMiddleware = require("./utils/configs/session-config");
 const passportConfig = require("./utils/configs/passport-config");
+const socketSetup = require("./utils/middlewares/socket");
 
 // Import Routes
 const authRoutes = require("./routes/authRoutes");
@@ -22,7 +23,7 @@ const app = express();
 const server = http.createServer(app);
 
 // Initialize Socket.IO
-const io = require('./utils/middlewares/socket')(server);
+socketSetup(server);
 
 // Frontend URL
 const FRONTEND_URL =
@@ -78,6 +79,6 @@ app.use((err, req, res, next) => {
 });  
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+server.listen(port, () => {
     console.log("App listening on port ", port);
 })

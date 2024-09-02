@@ -43,12 +43,6 @@ module.exports = (server) => {
             console.log(`User ${userId} subscribed to notifications`);
         });
 
-        // Emit notifications (can be called from other parts of your app)
-        socket.on('newNotification', (notification) => {
-            const { userId } = notification;
-            io.to(`notifications_${userId}`).emit('receiveNotification', notification);
-        });
-
         // Handle disconnect
         socket.on('disconnect', () => {
             console.log('Client disconnected:', socket.id);
