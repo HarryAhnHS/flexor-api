@@ -55,6 +55,5 @@ module.exports = {
             console.error("Error deleting images", error);
             throw new Error("Error deleting images");
         }
-
     },
 }

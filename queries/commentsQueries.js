@@ -82,6 +82,15 @@ module.exports = {
                 data: {
                   comment: commentContent,
                 },
+                include: {
+                    user: true,
+                    _count: {
+                        select: {
+                            nestedComments: true,
+                            likes: true
+                        }
+                    }
+                }
             });
             return comment;
         }

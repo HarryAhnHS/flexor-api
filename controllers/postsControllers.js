@@ -3,6 +3,7 @@ const likesQueries = require('../queries/likesQueries');
 const commentsQueries = require('../queries/commentsQueries');
 const usersQueries = require("../queries/usersQueries");
 const realmsQueries = require("../queries/realmsQueries");
+const imagesQueries = require("../queries/imagesQueries");
 
 module.exports = {
     getAllPosts: async (req, res) => {
