@@ -24,7 +24,7 @@ module.exports = {
             const uploadedImage = await imagesQueries.uploadImage(imageData);
             res.status(201).json({
                 message: "Successfully uploaded images",
-                imageUrl: uploadedImage.url
+                image: uploadedImage
             });
             // Remove local file after upload
             fs.unlinkSync(image.path);
@@ -35,32 +35,38 @@ module.exports = {
             });
         }
     },
-    deletePostImage: async (req, res) => {
-        const imageId = req.params.id;
+    deletePostImages: async (req, res) => {
+        const { deleteIds, deletePublicIds } = req.query;
+
+        // Convert comma-separated query parameters to arrays
+        const idsArray = deleteIds.split(',');
+        const publicIdsArray = deletePublicIds.split(',');
+        console.log(idsArray, publicIdsArray);
         try {
-            // Fetch the image from the database
-            const image = await imagesQueries.getImage(imageId);
-            if (image) {
-                // Remove image from Cloudinary
-                await cloudinary.uploader.destroy(image.publicId);
-    
-                // Delete image record from the database
-                await imagesQueries.deleteImage(imageId);
-    
-                res.status(200).json({
-                    message: "Successfully deleted image"
-                });
-            } else {
-                res.status(404).json({
-                    error: "Image not found"
-                });
-            }
-        } catch (error) {
-            res.status(500).json({
+            // Delete from cloudinary
+            if (publicIdsArray && publicIdsArray.length > 0) {
+                publicIdsArray.forEach(async (publicId) => {
+                    await cloudinary.uploader.destroy(publicId)
+                })
+            };
+
+            // Delete from database
+            if (idsArray && idsArray.length > 0) {
+                imagesQueries.deleteImagesArray(idsArray);
+            };
+
+            res.status(200).json({ 
+            message: 'Images deleted successfully'
+            });
+        } 
+        catch (error) {
+            console.error('Error deleting images:', error);
+            res.status(500).json({ 
                 error: error.message
             });
         }
-    },
+      },
+
     updateUserProfilePicture: async(req, res) => {
         const userId = req.user.id;
         const image = req.file;

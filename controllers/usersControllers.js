@@ -96,9 +96,9 @@ module.exports = {
     getUserFollowers: async (req, res) => {
         const { id } = req.params;
         try {
-            const followerUsers = await usersQueries.getUserFollowers(id);
+            const users = await usersQueries.getUserFollowers(id);
             res.status(200).json({
-                followerUsers
+                users
             })
         }
         catch(error) {
@@ -110,9 +110,9 @@ module.exports = {
     getUserFollowing: async (req, res) => {
         const { id } = req.params;
         try {
-            const followingUsers = await usersQueries.getUserFollowing(id);
+            const users = await usersQueries.getUserFollowing(id);
             res.status(200).json({
-                followingUsers
+                users
             })
         }
         catch(error) {

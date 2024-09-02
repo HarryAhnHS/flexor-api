@@ -28,10 +28,10 @@ module.exports = {
             const followingUserIds = (await usersQueries.getUserFollowing(userId)).map(user => user.id);
             const joinedRealmIds = (await realmsQueries.getUserJoinedRealms(userId)).map(realm => realm.id);
             // Get posts from user and realm Ids
-            const feedPosts = await postsQueries.getFeed(followingUserIds, joinedRealmIds, parseInt(page), parseInt(pageSize));
+            const posts = await postsQueries.getFeed(followingUserIds, joinedRealmIds, parseInt(page), parseInt(pageSize));
             
             res.status(200).json({
-                feedPosts
+                posts
             })
         }
         catch(error) {
@@ -61,7 +61,7 @@ module.exports = {
         try {
             const postData = {
                 authorId: id, 
-                realmId,
+                realmId: realmId || null,
                 title,
                 text,
                 published,
@@ -86,7 +86,6 @@ module.exports = {
     updatePost: async (req, res) => {
         const { id } = req.params;
         const { realmId, title, text, published, imageIds } = req.body;
-        const removeImages = JSON.parse(req.body.removeImages || '[]');  // Image IDs to remove
 
         try {
             // Update post data
@@ -99,21 +98,13 @@ module.exports = {
                     connect: imageIds.map((id) => ({ id })),
                 },
             };
-
             // Update post in the database
-            const updatedPost = await postsQueries.updatePost(id, updatedPostData);
-
-            // Handle image removals using axios to call image delete route
-            if (removeImages.length > 0) {
-                for (const imageId of removeImages) {
-                    await axios.delete(`/images/${imageId}`);
-                }
-            }
+            const post = await postsQueries.updatePost(id, updatedPostData);
 
             // Respond with the updated post
             res.status(200).json({
                 message: "Succesfully updated post",
-                updatedPost
+                post
             });
         } catch (error) {
             res.status(500).json({
@@ -140,10 +131,10 @@ module.exports = {
     getPostLikedUsers: async (req, res) => {
         const { id } = req.params;
         try {
-            const usersWhoLikedPost = await usersQueries.getUsersWhoLikedPost(id);
+            const users = await usersQueries.getUsersWhoLikedPost(id);
             // Respond with the created post
             res.status(200).json({
-                usersWhoLikedPost
+                users
             });
         }
         catch(error) {

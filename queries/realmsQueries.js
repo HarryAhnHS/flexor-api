@@ -141,7 +141,7 @@ module.exports = {
                     id
                 },
                 include: {
-                    creator,
+                    creator: true,
                     _count: {
                         select: {
                             posts: true,
@@ -150,6 +150,7 @@ module.exports = {
                     }
                 }
             });
+            console.log(realm);
             return realm;
         }
         catch(error) {

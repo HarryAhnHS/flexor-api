@@ -40,18 +40,21 @@ module.exports = {
             throw new Error("Error finding images");
         }
     },
-    deleteImage: async (id) => {
+    deleteImagesArray: async (deleteIds) => {
         try {
-            const image = await prisma.image.delete({
+            const images = await prisma.image.deleteMany({
                 where: {
-                    id
-                }
-            });
-            return image;
+                  id: {
+                    in: deleteIds,
+                  },
+                },
+              });
+            return images;
         }
-        catch (error) {
+        catch(error) {
             console.error("Error deleting images", error);
             throw new Error("Error deleting images");
         }
-    }
+
+    },
 }

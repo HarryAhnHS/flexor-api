@@ -161,7 +161,7 @@ module.exports = {
                     }
                 }
             });
-            return user.follower.map(follow => follow.follower);
+            return user.followers.map(follow => follow.follower);
         }
         catch(error) {
             console.error("Error getting user's followers", error);

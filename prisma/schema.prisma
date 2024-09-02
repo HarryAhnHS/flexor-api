@@ -102,8 +102,6 @@ model Post {
   authorId       String?
   likes          Like[]      @relation("LikedPost")
   comments       Comment[]
-
-  @@index([realmId])
 }
 
 model Image {

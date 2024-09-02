@@ -26,7 +26,7 @@ const isAuthorized = (resourceType) => {
         case 'image':
           resource = await prisma.image.findUnique({
             where: { id },
-            select: { ownerId: true } // Select only the authorId
+            select: { ownerId: true } // Select only the ownerId
           });
           if (resource?.ownerId !== userId) {
             return res.status(403).json({ error: "Unauthorized access" });

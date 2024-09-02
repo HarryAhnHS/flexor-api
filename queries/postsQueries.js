@@ -16,7 +16,11 @@ const prisma = new PrismaClient({
 module.exports = {
     getAllPosts: async () => {
         try {
-            const posts = await prisma.post.findMany({});
+            const posts = await prisma.post.findMany({
+                where: {
+                    published: true
+                }
+            });
             return posts;
         }
         catch(error) {
@@ -37,17 +41,6 @@ module.exports = {
                         { authorId: { in: followingUserIds } },
                         { realmId: { in: joinedRealmIds } }
                     ]
-                },
-                include: {
-                    author: true,
-                    realm: true,
-                    images: true,
-                    _count: {
-                        select: {
-                            likes: true,
-                            comments: true
-                        }
-                    }
                 },
                 distinct: ['id'], // Ensures no duplicate posts
                 orderBy: {
@@ -154,17 +147,6 @@ module.exports = {
                     realmId,
                     published: true
                 },
-                include: {
-                    realm: true,
-                    images: true,
-                    author: true,
-                    _count: {
-                        select: {
-                            likes: true,
-                            comments: true,
-                        }
-                    },
-                }
             })
             return posts;
         }

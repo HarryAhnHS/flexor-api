@@ -1,6 +1,7 @@
 const joinRealmsQueries = require("../queries/joinRealmsQueries");
 const realmsQueries = require("../queries/realmsQueries");
 const usersQueries = require("../queries/usersQueries");
+const postsQueries = require("../queries/postsQueries");
 
 module.exports = {
     getAllRealms: async (req, res) => {
@@ -82,6 +83,7 @@ module.exports = {
     getRealm: async (req, res) => {
         const { id } = req.params;
         try {
+            console.log("id=",id);
             const realm = await realmsQueries.getRealm(id);
             // Respond with the created post
             res.status(200).json({
