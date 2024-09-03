@@ -85,7 +85,11 @@ module.exports = ({
                 },
                 include: {
                     actor: true,
-                    post: true,
+                    post: {
+                        include: {
+                            images: true,
+                        }
+                    },
                 }
             });
 
@@ -115,7 +119,11 @@ module.exports = ({
                 },
                 include: {
                     actor: true,
-                    post: true,
+                    post: {
+                        include: {
+                            images: true,
+                        }
+                    }
                 }
             });
 
@@ -145,7 +153,15 @@ module.exports = ({
                 },
                 include: {
                     actor: true,
-                    comment: true,
+                    comment: {
+                        include: {
+                            post: {
+                                include: {
+                                    images: true,
+                                }
+                            },
+                        }
+                    },
                 }
             });
 
@@ -175,7 +191,15 @@ module.exports = ({
                 },
                 include: {
                     actor: true,
-                    comment: true,
+                    comment: {
+                        include: {
+                            post: {
+                                include: {
+                                    images: true,
+                                }
+                            },
+                        }
+                    },
                 }
             });
 
@@ -200,8 +224,20 @@ module.exports = ({
                 include: {
                     // Include all possible types - will be null if not matching sourceType
                     actor: true,
-                    post: true,
-                    comment: true,
+                    post: {
+                        include: {
+                            images: true,
+                        }
+                    },
+                    comment: {
+                        include: {
+                            post: {
+                                include: {
+                                    images: true,
+                                }
+                            },
+                        }
+                    },
                     realm: true,
                 },
             });
