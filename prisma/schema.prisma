@@ -86,6 +86,8 @@ model Realm {
   posts          Post[]
   joined         JoinRealm[] @relation("JoinedRealm")
 
+  notifications  Notification[] @relation("RealmNotifications")
+
   @@unique([name])
 }
 
@@ -106,6 +108,8 @@ model Post {
   authorId       String?
   likes          Like[]      @relation("LikedPost")
   comments       Comment[]
+
+  notifications  Notification[] @relation("PostNotifications")
 }
 
 model Image {
@@ -145,6 +149,8 @@ model Comment {
   nestedComments Comment[]   @relation("NestedComments")
 
   likes          CommentLike[]
+
+  notifications  Notification[] @relation("CommentNotifications")
 }
 
 model CommentLike {
@@ -156,7 +162,7 @@ model CommentLike {
   comment        Comment     @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId      String
 
-  @@unique([userId, commentId]) // Ensures a user can like a comment only once
+  @@unique([userId, commentId])
   @@index([userId])
   @@index([commentId])
 }
@@ -169,10 +175,23 @@ model Notification {
   actor      User?       @relation("Actor", fields: [actorId], references: [id])
   type       String?
   sourceId   String?
+  sourceType  NotificationSourceType
+
+  post        Post?     @relation("PostNotifications", fields: [sourceId], references: [id], map: "PostSourceId_fkey", onDelete: Cascade)
+  comment     Comment?  @relation("CommentNotifications", fields: [sourceId], references: [id], map: "CommentSourceId_fkey", onDelete: Cascade)
+  realm       Realm?    @relation("RealmNotifications", fields: [sourceId], references: [id], map: "RealmSourceId_fkey", onDelete: Cascade)
+
   createdAt  DateTime   @default(now())
   isRead     Boolean    @default(false)
 
   @@index([userId])
+}
+
+enum NotificationSourceType {
+  POST
+  COMMENT
+  REALM
+  USER
 }
 
 

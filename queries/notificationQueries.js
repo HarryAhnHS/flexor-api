@@ -22,6 +22,7 @@ module.exports = ({
                     userId,
                     actorId,
                     type: 'follow',
+                    sourceType: "USER",
                 },
                 include: {
                     actor: true,
@@ -47,9 +48,14 @@ module.exports = ({
                     actorId,
                     type: 'realm_join',
                     sourceId: realmId,
+                    sourceType: "REALM",
+                    realm: {
+                        connect: { id: realmId },
+                    },
                 },
                 include: {
                     actor: true,
+                    realm: true,
                 }
             });
 
@@ -72,9 +78,14 @@ module.exports = ({
                     actorId,
                     type: 'post_like',
                     sourceId: postId,
+                    sourceType: "POST",
+                    post: {
+                        connect: { id: postId },
+                    },
                 },
                 include: {
                     actor: true,
+                    post: true,
                 }
             });
 
@@ -97,9 +108,14 @@ module.exports = ({
                     actorId,
                     type: 'post_comment',
                     sourceId: postId,
+                    sourceType: "POST",
+                    post: {
+                        connect: { id: postId },
+                    },
                 },
                 include: {
                     actor: true,
+                    post: true,
                 }
             });
 
@@ -122,9 +138,14 @@ module.exports = ({
                     actorId,
                     type: 'comment_like',
                     sourceId: commentId,
+                    sourceType: "COMMENT",
+                    comment: {
+                        connect: { id: commentId },
+                    },
                 },
                 include: {
                     actor: true,
+                    comment: true,
                 }
             });
 
@@ -147,9 +168,14 @@ module.exports = ({
                     actorId,
                     type: 'comment_reply',
                     sourceId: commentId,
+                    sourceType: "COMMENT",
+                    comment: {
+                        connect: { id: commentId },
+                    },
                 },
                 include: {
                     actor: true,
+                    comment: true,
                 }
             });
 
@@ -172,7 +198,11 @@ module.exports = ({
                 skip,
                 take: limit,
                 include: {
-                  actor: true
+                    // Include all possible types - will be null if not matching sourceType
+                    actor: true,
+                    post: true,
+                    comment: true,
+                    realm: true,
                 },
             });
             return notifications;
