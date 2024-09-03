@@ -170,6 +170,7 @@ model Notification {
   type       String?
   sourceId   String?
   createdAt  DateTime   @default(now())
+  isRead     Boolean    @default(false)
 
   @@index([userId])
 }

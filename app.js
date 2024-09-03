@@ -17,6 +17,7 @@ const postsRoutes = require("./routes/postsRoutes");
 const commentsRoutes = require("./routes/commentsRoutes");
 const realmsRoutes = require("./routes/realmsRoutes");
 const imagesRoutes = require("./routes/imagesRoutes");
+const notificationRoutes = require('./routes/notificationsRoutes');
 
 // Initialize express
 const app = express();
@@ -63,6 +64,9 @@ app.use('/posts', passport.authenticate('jwt', { session: false }), postsRoutes)
 app.use('/comments', passport.authenticate('jwt', { session: false }), commentsRoutes);
 app.use('/realms', passport.authenticate('jwt', { session: false }), realmsRoutes);
 app.use('/images', passport.authenticate('jwt', { session: false }), imagesRoutes);
+app.use('/notifications', passport.authenticate('jwt', { session: false }), notificationRoutes);
+
+
 
 // Global error handler
 app.use((err, req, res, next) => {

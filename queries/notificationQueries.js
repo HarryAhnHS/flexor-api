@@ -163,4 +163,49 @@ module.exports = ({
             throw new Error('Error creating comment reply notification');
         }
     },
+    getNotifications: async (userId, page, limit) => {
+        const skip = (page - 1) * limit;
+        try {
+            const notifications = await prisma.notification.findMany({
+                where: { userId },
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: limit,
+                include: {
+                  actor: true
+                },
+            });
+            return notifications;
+        }
+        catch(error) {
+            console.error("Error getting notifications", error);
+            throw new Error("Error getting notifications");
+        }
+    },
+    getNotificationsCount: async (userId) => {
+        try {
+            const count = await prisma.notification.count({ where: { userId } });
+            return count;
+        }
+        catch(error) {
+            console.error("Error getting notifications count", error);
+            throw new Error("Error getting notifications count");
+        }
+    }
+    // markAsRead: async (notificationId) => {
+    //     try {
+    //         const notification = await prisma.notification.update({
+    //             where: {
+    //                 id: notificationId,
+    //             },
+    //             data: {
+    //                 isRead: true
+    //             }
+    //         })
+    //     }
+    //     catch(error) {
+    //         console.error('Error marking notification as read', error);
+    //         throw new Error('Error marking notification as read');
+    //     }
+    // }
 });
