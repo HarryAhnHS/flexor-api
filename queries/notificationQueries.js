@@ -46,12 +46,9 @@ module.exports = ({
                 data: {
                     userId,
                     actorId,
+                    realmId,
                     type: 'realm_join',
-                    sourceId: realmId,
                     sourceType: "REALM",
-                    realm: {
-                        connect: { id: realmId },
-                    },
                 },
                 include: {
                     actor: true,
@@ -76,12 +73,9 @@ module.exports = ({
                 data: {
                     userId,
                     actorId,
+                    postId,
                     type: 'post_like',
-                    sourceId: postId,
                     sourceType: "POST",
-                    post: {
-                        connect: { id: postId },
-                    },
                 },
                 include: {
                     actor: true,
@@ -110,12 +104,9 @@ module.exports = ({
                 data: {
                     userId,
                     actorId,
+                    postId,
                     type: 'post_comment',
-                    sourceId: postId,
                     sourceType: "POST",
-                    post: {
-                        connect: { id: postId },
-                    },
                 },
                 include: {
                     actor: true,
@@ -144,12 +135,9 @@ module.exports = ({
                 data: {
                     userId,
                     actorId,
+                    commentId,
                     type: 'comment_like',
-                    sourceId: commentId,
                     sourceType: "COMMENT",
-                    comment: {
-                        connect: { id: commentId },
-                    },
                 },
                 include: {
                     actor: true,
@@ -182,12 +170,9 @@ module.exports = ({
                 data: {
                     userId,
                     actorId,
+                    commentId,
                     type: 'comment_reply',
-                    sourceId: commentId,
                     sourceType: "COMMENT",
-                    comment: {
-                        connect: { id: commentId },
-                    },
                 },
                 include: {
                     actor: true,
