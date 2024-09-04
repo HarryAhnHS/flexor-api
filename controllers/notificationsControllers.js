@@ -7,13 +7,12 @@ module.exports = {
         const limit = parseInt(req.query.limit) || 10;
 
         try {
-            const notifications = await notificationQueries.getNotifications(userId, page, limit);
-            const count = await notificationQueries.getNotificationsCount(userId);
+            const { notifications, total } = await notificationQueries.getNotifications(userId, page, limit);
             res.status(200).json({
                 notifications,
-                total: count,
+                total,
                 page,
-                totalPages: Math.ceil(count / limit),
+                totalPages: Math.ceil(total / limit),
             })
         }
         catch(error) {

@@ -36,10 +36,15 @@ module.exports = {
     },
     getUserPosts: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const posts = await postsQueries.getUserPosts(id);
+            const { posts, total } = await postsQueries.getUserPosts(id);
             res.status(200).json({
-                posts
+                posts,
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             })
 
         }
@@ -51,10 +56,15 @@ module.exports = {
     },
     getUserDrafts: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const drafts = await postsQueries.getUserDrafts(id);
+            const { drafts, total } = await postsQueries.getUserDrafts(id);
             res.status(200).json({
-                posts: drafts
+                posts: drafts,
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             })
         }
         catch(error) {
@@ -65,10 +75,15 @@ module.exports = {
     },
     getUserLikedPosts: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const posts = await postsQueries.getUserLikedPosts(id);
+            const { posts, total } = await postsQueries.getUserLikedPosts(id);
             res.status(200).json({
-                posts
+                posts,
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             })
 
         }
@@ -80,10 +95,15 @@ module.exports = {
     },
     getUserCommentedPosts: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const posts = await postsQueries.getUserCommentedPosts(id);
+            const { posts, total}  = await postsQueries.getUserCommentedPosts(id);
             res.status(200).json({
-                posts
+                posts,
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             })
 
         }

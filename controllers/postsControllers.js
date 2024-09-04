@@ -8,11 +8,16 @@ const notificationQueries = require("../queries/notificationQueries");
 
 module.exports = {
     getAllPosts: async (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const posts = await postsQueries.getAllPosts();
+            const { posts, total } = await postsQueries.getAllPosts(page, limit);
             // Respond with the created post
             res.status(200).json({
-                posts
+                posts,
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             });
         }
         catch(error) {
@@ -23,17 +28,21 @@ module.exports = {
     },
     getFeed: async (req, res) => {
         const userId = req.user.id;
-        const { page = 1, pageSize = 10 } = req.query;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
 
         try {
             // Get user's following user and joined realms Ids
             const followingUserIds = (await usersQueries.getUserFollowing(userId)).map(user => user.id);
             const joinedRealmIds = (await realmsQueries.getUserJoinedRealms(userId)).map(realm => realm.id);
             // Get posts from user and realm Ids
-            const posts = await postsQueries.getFeed(followingUserIds, joinedRealmIds, parseInt(page), parseInt(pageSize));
+            const { posts, total } = await postsQueries.getFeed(followingUserIds, joinedRealmIds, page, limit);
             
             res.status(200).json({
-                posts
+                posts,
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             })
         }
         catch(error) {

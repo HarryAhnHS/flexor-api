@@ -99,10 +99,15 @@ module.exports = {
     },
     getRealmPosts: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const posts = await postsQueries.getRealmPosts(id);
+            const { posts, total } = await postsQueries.getRealmPosts(id);
             res.status(200).json({
-                posts
+                posts,
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             })
         }
         catch(error) {
