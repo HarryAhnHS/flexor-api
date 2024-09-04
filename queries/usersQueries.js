@@ -137,7 +137,8 @@ module.exports = {
             throw new Error("Error deleting user");
         }
     },
-    getUserFollowers: async (id) => {
+    getUserFollowers: async (id, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const user = await prisma.user.findUnique({
                 where: { 
@@ -159,7 +160,9 @@ module.exports = {
                             }
                         }
                     }
-                }
+                },
+                skip,
+                take: limit,
             });
             return user.followers.map(follow => follow.follower);
         }
@@ -168,29 +171,32 @@ module.exports = {
             throw new Error("Error getting user's followers");
         }
     },
-    getUserFollowing: async (id) => {
+    getUserFollowing: async (id, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const user = await prisma.user.findUnique({
-            where: { 
-                id
-            },
-            include: {
-                following: {
-                    include: {
-                        following: {
-                            include: {
-                                _count: {
-                                    select: {
-                                        posts: true,
-                                        followers: true,
-                                        following: true,
+                where: { 
+                    id
+                },
+                include: {
+                    following: {
+                        include: {
+                            following: {
+                                include: {
+                                    _count: {
+                                        select: {
+                                            posts: true,
+                                            followers: true,
+                                            following: true,
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-            }
+                },
+                skip,
+                take: limit,
             });
             return user.following.map(follow => follow.following);
         }
@@ -199,7 +205,8 @@ module.exports = {
             throw new Error("Error getting user's following");
         }
     },
-    getUsersWhoLikedPost: async (postId) => {
+    getUsersWhoLikedPost: async (postId, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const users = await prisma.user.findMany({
                 where:{
@@ -217,7 +224,9 @@ module.exports = {
                             following: true,
                         }
                     }
-                }
+                },
+                skip,
+                take: limit,
             })
             return users;
         }
@@ -226,7 +235,8 @@ module.exports = {
             throw new Error("Error getting users who liked post");
         }
     },
-    getUsersWhoLikedComment: async (commentId) => {
+    getUsersWhoLikedComment: async (commentId, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const users = await prisma.user.findMany({
                 where:{
@@ -244,7 +254,9 @@ module.exports = {
                             following: true,
                         }
                     }
-                }
+                },
+                skip,
+                take: limit,
             })
             return users;
         }
@@ -253,25 +265,28 @@ module.exports = {
             throw new Error("Error getting users who liked comment");
         }
     },
-    getRealmJoiners: async (realmId) => {
+    getRealmJoiners: async (realmId, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const users = await prisma.user.findMany({
-            where: { 
-                joinedRealms: {
-                    some: {
-                        realmId
+                where: { 
+                    joinedRealms: {
+                        some: {
+                            realmId
+                        }
                     }
-                }
-            },
-            include: {
-                _count: {
-                    select: {
-                        posts: true,
-                        followers: true,
-                        following: true,
+                },
+                include: {
+                    _count: {
+                        select: {
+                            posts: true,
+                            followers: true,
+                            following: true,
+                        }
                     }
-                }
-            }
+                },
+                skip,
+                take: limit,
             });
             return users;
         }

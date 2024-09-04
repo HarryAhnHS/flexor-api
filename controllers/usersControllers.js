@@ -104,8 +104,10 @@ module.exports = {
     },
     getUserFollowers: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const users = await usersQueries.getUserFollowers(id);
+            const users = await usersQueries.getUserFollowers(id, page, limit);
             res.status(200).json({
                 users
             })
@@ -118,8 +120,10 @@ module.exports = {
     },
     getUserFollowing: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const users = await usersQueries.getUserFollowing(id);
+            const users = await usersQueries.getUserFollowing(id, page, limit);
             res.status(200).json({
                 users
             })

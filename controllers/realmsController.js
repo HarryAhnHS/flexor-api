@@ -115,8 +115,11 @@ module.exports = {
     },
     getRealmJoiners: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
         try {
-            const users = await usersQueries.getRealmJoiners(id);
+            const users = await usersQueries.getRealmJoiners(id, page, limit);
             res.status(200).json({
                 users
             })

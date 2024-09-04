@@ -64,12 +64,14 @@ module.exports = {
     },
     getUsersWhoLikedComment: async (req, res) => {
         const commentId = req.params.id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
         try {
-            const users = await usersQueries.getUsersWhoLikedComment(commentId);
+            const users = await usersQueries.getUsersWhoLikedComment(commentId, page, limit);
             res.status(200).json({
                 users
             })
-
         }
         catch(error) {
             res.status(500).json({

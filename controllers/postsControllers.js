@@ -135,8 +135,10 @@ module.exports = {
     },
     getPostLikedUsers: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const users = await usersQueries.getUsersWhoLikedPost(id);
+            const users = await usersQueries.getUsersWhoLikedPost(id, page, limit);
             // Respond with the created post
             res.status(200).json({
                 users

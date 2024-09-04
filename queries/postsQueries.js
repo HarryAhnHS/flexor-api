@@ -109,7 +109,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            return total;
+            return posts;
         }
         catch(error) {
             console.error("Error getting users liked posts", error);
