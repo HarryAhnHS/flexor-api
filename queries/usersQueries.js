@@ -158,11 +158,11 @@ module.exports = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        skip,
+                        take: limit,
                     }
                 },
-                skip,
-                take: limit,
             });
             return user.followers.map(follow => follow.follower);
         }
@@ -192,11 +192,11 @@ module.exports = {
                                     }
                                 }
                             }
-                        }
+                        },
+                        skip,
+                        take: limit,
                     }
                 },
-                skip,
-                take: limit,
             });
             return user.following.map(follow => follow.following);
         }

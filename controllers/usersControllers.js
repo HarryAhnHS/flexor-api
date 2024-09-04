@@ -136,8 +136,10 @@ module.exports = {
     },
     getUserJoinedRealms: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const realms = await realmsQueries.getUserJoinedRealms(id);
+            const realms = await realmsQueries.getUserJoinedRealms(id, page, limit);
             res.status(200).json({
                 realms
             })
@@ -150,8 +152,10 @@ module.exports = {
     },
     getUserCreatedRealms: async (req, res) => {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const realms = await realmsQueries.getUserCreatedRealms(id);
+            const realms = await realmsQueries.getUserCreatedRealms(id, page, limit);
             res.status(200).json({
                 realms
             })

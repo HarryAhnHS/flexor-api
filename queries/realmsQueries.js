@@ -14,7 +14,8 @@ const prisma = new PrismaClient({
 });
 
 module.exports = {
-    getAllRealms: async () => {
+    getAllRealms: async (page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const realms = await prisma.realm.findMany({
                 include: {
@@ -25,7 +26,9 @@ module.exports = {
                             joined: true,
                         }
                     }
-                }
+                },
+                skip,
+                take: limit,
             });
             return realms;
         }
@@ -34,7 +37,8 @@ module.exports = {
             throw new Error("Error getting all realms");
         }
     },
-    getUserJoinedRealms: async (userId) => {
+    getUserJoinedRealms: async (userId, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const realms = await prisma.realm.findMany({
                 where: {
@@ -52,7 +56,9 @@ module.exports = {
                             joined: true,
                         }
                     }
-                }
+                },
+                skip,
+                take: limit,
             });
             return realms;
         }
@@ -61,7 +67,8 @@ module.exports = {
             throw new Error("Error getting user joined realms");
         }
     },
-    getUserCreatedRealms: async (userId) => {
+    getUserCreatedRealms: async (userId, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const realms = await prisma.realm.findMany({
                 where: {
@@ -75,7 +82,9 @@ module.exports = {
                             joined: true,
                         }
                     }
-                }
+                },
+                skip,
+                take: limit,
             });
             return realms;
         }

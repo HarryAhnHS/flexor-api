@@ -6,8 +6,10 @@ const notificationQueries = require("../queries/notificationQueries");
 
 module.exports = {
     getAllRealms: async (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         try {
-            const realms = await realmsQueries.getAllRealms();
+            const realms = await realmsQueries.getAllRealms(page, limit);
             // Respond with the created post
             res.status(200).json({
                 realms
