@@ -179,20 +179,6 @@ module.exports = {
                     realm: true,
                     images: true,
                     author: true,
-                    comments: {
-                        where: {
-                            parentId: null,
-                        },
-                        include: {
-                            user: true,
-                            _count: {
-                                select: {
-                                    nestedComments: true,
-                                    likes: true
-                                }
-                            }
-                        }
-                    },
                     _count: {
                         select: {
                             likes: true

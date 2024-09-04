@@ -48,6 +48,34 @@ module.exports = {
             throw new Error("Error getting comment by id");
         } 
     },
+    getPostRootComments: async (postId, page, limit) => {
+        const skip = (page - 1) * limit;
+        try {
+            const comment = await prisma.comment.findMany({
+                where: {
+                  postId,
+                  parentId: null,
+                },
+                include: {
+                    user: true,
+                    post: true,
+                    _count: {
+                        select: {
+                            nestedComments: true,
+                            likes: true
+                        }
+                    }
+                },
+                skip,
+                take: limit,
+            });
+            return comment;
+        }
+        catch(error) {
+            console.error("Error adding comment", error);
+            throw new Error("Error adding comment");
+        }
+    },
     addRootComment: async (userId, postId, commentContent) => {
         try {
             const comment = await prisma.comment.create({
@@ -114,7 +142,8 @@ module.exports = {
             throw new Error("Error deleting comment");
         }
     },
-    getNestedComments: async (id) => {
+    getNestedComments: async (id, page, limit) => {
+        const skip = (page - 1) * limit;
         try {
             const comment = await prisma.comment.findMany({
                 where: {
@@ -128,6 +157,8 @@ module.exports = {
                         }
                     }
                 },
+                skip,
+                take: limit,
             });
             return comment;
         }

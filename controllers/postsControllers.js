@@ -3,7 +3,6 @@ const likesQueries = require('../queries/likesQueries');
 const commentsQueries = require('../queries/commentsQueries');
 const usersQueries = require("../queries/usersQueries");
 const realmsQueries = require("../queries/realmsQueries");
-const imagesQueries = require("../queries/imagesQueries");
 const notificationQueries = require("../queries/notificationQueries");
 
 module.exports = {
@@ -56,6 +55,22 @@ module.exports = {
         catch(error) {
             res.status(500).json({
                 error: error.message
+            })
+        }
+    },
+    getPostRootComments: async (req, res) => {
+        const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        try {
+            const comments = await commentsQueries.getPostRootComments(id, page, limit);
+            res.status(200).json({
+                comments
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
             })
         }
     },

@@ -14,6 +14,9 @@ router.get('/feed', postsControllers.getFeed);
 // Get a specific post including realm, author, images, and post's root comments + count of nested comments
 router.get('/:id', postsControllers.getPost);
 
+// Get root comments including realm, author, images, and post's root comments + count of nested comments
+router.get('/:id/comments', postsControllers.getPostRootComments);
+
 // Get all users who liked a post
 router.get('/:id/liked', postsControllers.getPostLikedUsers);
 
