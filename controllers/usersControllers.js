@@ -38,13 +38,11 @@ module.exports = {
         const { id } = req.params;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+
         try {
-            const { posts, total } = await postsQueries.getUserPosts(id);
+            const posts = await postsQueries.getUserPosts(id, page, limit);
             res.status(200).json({
                 posts,
-                total,
-                page,
-                totalPages: Math.ceil(total / limit),
             })
 
         }
@@ -59,12 +57,9 @@ module.exports = {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         try {
-            const { drafts, total } = await postsQueries.getUserDrafts(id);
+            const drafts = await postsQueries.getUserDrafts(id, page, limit);
             res.status(200).json({
-                posts: drafts,
-                total,
-                page,
-                totalPages: Math.ceil(total / limit),
+                posts: drafts
             })
         }
         catch(error) {
@@ -78,12 +73,9 @@ module.exports = {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         try {
-            const { posts, total } = await postsQueries.getUserLikedPosts(id);
+            const posts = await postsQueries.getUserLikedPosts(id, page, limit);
             res.status(200).json({
                 posts,
-                total,
-                page,
-                totalPages: Math.ceil(total / limit),
             })
 
         }
@@ -98,12 +90,9 @@ module.exports = {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         try {
-            const { posts, total}  = await postsQueries.getUserCommentedPosts(id);
+            const posts  = await postsQueries.getUserCommentedPosts(id, page, limit);
             res.status(200).json({
-                posts,
-                total,
-                page,
-                totalPages: Math.ceil(total / limit),
+                posts
             })
 
         }

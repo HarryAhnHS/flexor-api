@@ -204,8 +204,6 @@ module.exports = ({
             const notifications = await prisma.notification.findMany({
                 where: { userId },
                 orderBy: { createdAt: 'desc' },
-                skip,
-                take: limit,
                 include: {
                     actor: true,
                     post: {
@@ -224,11 +222,10 @@ module.exports = ({
                     },
                     realm: true,
                 },
+                skip,
+                take: limit,
             });
-
-            const total = await prisma.notification.count({ where: { userId } });
-
-            return {notifications, total};
+            return notifications;
         }
         catch(error) {
             console.error("Error getting notifications", error);

@@ -24,12 +24,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            const total = await prisma.post.count({
-                where: {
-                    published: true
-                },
-            })
-            return { posts, total };
+            return posts;
         }
         catch(error) {
             console.error("Error getting all posts", error);
@@ -55,17 +50,8 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            const total = await prisma.post.count({
-                where: {
-                    published: true,
-                    OR: [
-                        { authorId: { in: followingUserIds } },
-                        { realmId: { in: joinedRealmIds } }
-                    ]
-                },
-                distinct: ['id'], // Ensures no duplicate posts
-            });
-            return { posts, total };
+    
+            return posts;
         }
         catch(error) {
             console.error("Error getting feed", error);
@@ -83,13 +69,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            const total = await prisma.post.count({
-                where: { 
-                    authorId,
-                    published: true
-                },
-            });
-            return {posts, total};
+            return posts;
         }
         catch(error) {
             console.error("Error getting users posts", error);
@@ -107,13 +87,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            const total = await prisma.post.count({
-                where: { 
-                    authorId,
-                    published: false
-                },
-            });
-            return {drafts, total};
+            return drafts;
         }
         catch(error) {
             console.error("Error getting users drafts", error);
@@ -135,17 +109,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            const total = await prisma.post.count({
-                where: {
-                    published: true,
-                    likes: {
-                        some: {
-                            userId
-                        }
-                    }
-                },
-            });
-            return {posts, total};
+            return total;
         }
         catch(error) {
             console.error("Error getting users liked posts", error);
@@ -182,32 +146,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            const total = await prisma.post.count({
-                where: {
-                    published: true,
-                    OR: [
-                        {
-                            comments: {
-                                some: {
-                                    userId,
-                                },
-                            },
-                        },
-                        {
-                            comments: {
-                                some: {
-                                    nestedComments: {
-                                        some: {
-                                            userId: userId,  // Nested comments by the user
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                },
-            });
-            return {posts, total};
+            return posts;
         }
         catch(error) {
             console.error("Error getting users commented posts", error);
@@ -225,15 +164,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            const total = await prisma.post.count({
-                where: { 
-                    realmId,
-                    published: true
-                },
-                skip,
-                take: limit,
-            })
-            return {posts, total};
+            return posts;
         }
         catch(error) {
             console.error("Error getting realms posts", error);
