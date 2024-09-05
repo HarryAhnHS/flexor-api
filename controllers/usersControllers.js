@@ -38,9 +38,11 @@ module.exports = {
         const { id } = req.params;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder || 'desc';
 
         try {
-            const posts = await postsQueries.getUserPosts(id, page, limit);
+            const posts = await postsQueries.getUserPosts(id, page, limit, sortField, sortOrder);
             res.status(200).json({
                 posts,
             })
@@ -56,8 +58,10 @@ module.exports = {
         const { id } = req.params;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder || 'desc';
         try {
-            const drafts = await postsQueries.getUserDrafts(id, page, limit);
+            const drafts = await postsQueries.getUserDrafts(id, page, limit, sortField, sortOrder);
             res.status(200).json({
                 posts: drafts
             })
@@ -72,8 +76,10 @@ module.exports = {
         const { id } = req.params;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder || 'desc';
         try {
-            const posts = await postsQueries.getUserLikedPosts(id, page, limit);
+            const posts = await postsQueries.getUserLikedPosts(id, page, limit, sortField, sortOrder);
             res.status(200).json({
                 posts,
             })
@@ -89,8 +95,10 @@ module.exports = {
         const { id } = req.params;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder || 'desc';
         try {
-            const posts  = await postsQueries.getUserCommentedPosts(id, page, limit);
+            const posts  = await postsQueries.getUserCommentedPosts(id, page, limit, sortField, sortOrder);
             res.status(200).json({
                 posts
             })

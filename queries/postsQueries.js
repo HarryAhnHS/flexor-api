@@ -14,12 +14,15 @@ const prisma = new PrismaClient({
 });
 
 module.exports = {
-    getAllPosts: async (page, limit) => {
+    getAllPosts: async (page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         try {
             const posts = await prisma.post.findMany({
                 where: {
                     published: true
+                },
+                orderBy: {
+                    [sortField]: sortOrder
                 },
                 skip,
                 take: limit,
@@ -31,7 +34,7 @@ module.exports = {
             throw new Error("Error getting all posts");
         }
     },
-    getFeed: async (followingUserIds, joinedRealmIds, page, limit) => {
+    getFeed: async (followingUserIds, joinedRealmIds, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         try {
             // Fetch posts from followed users or joined realms in a single query
@@ -45,7 +48,7 @@ module.exports = {
                 },
                 distinct: ['id'], // Ensures no duplicate posts
                 orderBy: {
-                    createdAt: 'desc'
+                    [sortField]: sortOrder
                 },
                 skip,
                 take: limit,
@@ -58,13 +61,16 @@ module.exports = {
             throw new Error("Error getting feed");
         }
     },
-    getUserPosts: async (authorId, page, limit) => {
+    getUserPosts: async (authorId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         try {
             const posts = await prisma.post.findMany({
                 where: { 
                     authorId,
                     published: true
+                },
+                orderBy: {
+                    [sortField]: sortOrder
                 },
                 skip,
                 take: limit,
@@ -76,13 +82,16 @@ module.exports = {
             throw new Error("Error getting users posts");
         }
     }, 
-    getUserDrafts: async (authorId, page, limit) => {
+    getUserDrafts: async (authorId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         try {
             const drafts = await prisma.post.findMany({
                 where: { 
                     authorId,
                     published: false
+                },
+                orderBy: {
+                    [sortField]: sortOrder
                 },
                 skip,
                 take: limit,
@@ -94,7 +103,7 @@ module.exports = {
             throw new Error("Error getting users draft");
         }
     },
-    getUserLikedPosts: async (userId, page, limit) => {
+    getUserLikedPosts: async (userId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         try {
             const posts = await prisma.post.findMany({
@@ -106,6 +115,9 @@ module.exports = {
                         }
                     }
                 },
+                orderBy: {
+                    [sortField]: sortOrder
+                },
                 skip,
                 take: limit,
             });
@@ -116,7 +128,7 @@ module.exports = {
             throw new Error("Error getting users liked posts");
         }
     },
-    getUserCommentedPosts: async (userId, page, limit) => {
+    getUserCommentedPosts: async (userId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         try {
             const posts = await prisma.post.findMany({
@@ -143,6 +155,9 @@ module.exports = {
                         },
                     ],
                 },
+                orderBy: {
+                    [sortField]: sortOrder
+                },
                 skip,
                 take: limit,
             });
@@ -153,13 +168,16 @@ module.exports = {
             throw new Error("Error getting users commented posts");
         }
     },
-    getRealmPosts: async (realmId, page, limit) => {
+    getRealmPosts: async (realmId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         try {
             const posts = await prisma.post.findMany({
                 where: { 
                     realmId,
                     published: true
+                },
+                orderBy: {
+                    [sortField]: sortOrder
                 },
                 skip,
                 take: limit,
