@@ -16,14 +16,34 @@ const prisma = new PrismaClient({
 module.exports = {
     getAllPosts: async (page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        let orderBy = {};
+        if (sortField === 'comments') {
+            orderBy = {
+                _count: { comments: sortOrder }
+            };
+        } 
+        else if (sortField === 'likes') {
+            orderBy = {
+                _count: { likes: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
+
         try {
             const posts = await prisma.post.findMany({
                 where: {
                     published: true
                 },
-                orderBy: {
-                    [sortField]: sortOrder
+                include: {
+                    _count: {
+                        select: { comments: true, likes: true }
+                    }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
@@ -36,6 +56,23 @@ module.exports = {
     },
     getFeed: async (followingUserIds, joinedRealmIds, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        let orderBy = {};
+        if (sortField === 'comments') {
+            orderBy = {
+                _count: { comments: sortOrder }
+            };
+        } 
+        else if (sortField === 'likes') {
+            orderBy = {
+                _count: { likes: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
+
         try {
             // Fetch posts from followed users or joined realms in a single query
             const posts = await prisma.post.findMany({
@@ -47,9 +84,12 @@ module.exports = {
                     ]
                 },
                 distinct: ['id'], // Ensures no duplicate posts
-                orderBy: {
-                    [sortField]: sortOrder
+                include: {
+                    _count: {
+                        select: { comments: true, likes: true }
+                    }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
@@ -63,15 +103,35 @@ module.exports = {
     },
     getUserPosts: async (authorId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        let orderBy = {};
+        if (sortField === 'comments') {
+            orderBy = {
+                _count: { comments: sortOrder }
+            };
+        } 
+        else if (sortField === 'likes') {
+            orderBy = {
+                _count: { likes: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
+        
         try {
             const posts = await prisma.post.findMany({
                 where: { 
                     authorId,
                     published: true
                 },
-                orderBy: {
-                    [sortField]: sortOrder
+                include: {
+                    _count: {
+                        select: { comments: true, likes: true }
+                    }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
@@ -84,15 +144,35 @@ module.exports = {
     }, 
     getUserDrafts: async (authorId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        let orderBy = {};
+        if (sortField === 'comments') {
+            orderBy = {
+                _count: { comments: sortOrder }
+            };
+        } 
+        else if (sortField === 'likes') {
+            orderBy = {
+                _count: { likes: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
+
         try {
             const drafts = await prisma.post.findMany({
                 where: { 
                     authorId,
                     published: false
                 },
-                orderBy: {
-                    [sortField]: sortOrder
+                include: {
+                    _count: {
+                        select: { comments: true, likes: true }
+                    }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
@@ -105,6 +185,23 @@ module.exports = {
     },
     getUserLikedPosts: async (userId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        let orderBy = {};
+        if (sortField === 'comments') {
+            orderBy = {
+                _count: { comments: sortOrder }
+            };
+        } 
+        else if (sortField === 'likes') {
+            orderBy = {
+                _count: { likes: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
+
         try {
             const posts = await prisma.post.findMany({
                 where: {
@@ -115,9 +212,12 @@ module.exports = {
                         }
                     }
                 },
-                orderBy: {
-                    [sortField]: sortOrder
+                include: {
+                    _count: {
+                        select: { comments: true, likes: true }
+                    }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
@@ -130,6 +230,23 @@ module.exports = {
     },
     getUserCommentedPosts: async (userId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        let orderBy = {};
+        if (sortField === 'comments') {
+            orderBy = {
+                _count: { comments: sortOrder }
+            };
+        } 
+        else if (sortField === 'likes') {
+            orderBy = {
+                _count: { likes: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
+
         try {
             const posts = await prisma.post.findMany({
                 where: {
@@ -155,9 +272,12 @@ module.exports = {
                         },
                     ],
                 },
-                orderBy: {
-                    [sortField]: sortOrder
+                include: {
+                    _count: {
+                        select: { comments: true, likes: true }
+                    }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
@@ -170,15 +290,35 @@ module.exports = {
     },
     getRealmPosts: async (realmId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        let orderBy = {};
+        if (sortField === 'comments') {
+            orderBy = {
+                _count: { comments: sortOrder }
+            };
+        } 
+        else if (sortField === 'likes') {
+            orderBy = {
+                _count: { likes: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
+
         try {
             const posts = await prisma.post.findMany({
                 where: { 
                     realmId,
                     published: true
                 },
-                orderBy: {
-                    [sortField]: sortOrder
+                include: {
+                    _count: {
+                        select: { comments: true, likes: true }
+                    }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
