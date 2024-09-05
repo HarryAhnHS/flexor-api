@@ -48,14 +48,30 @@ module.exports = {
             throw new Error("Error getting comment by id");
         } 
     },
-    getPostRootComments: async (postId, page, limit) => {
+    getPostRootComments: async (postId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
+        if (sortField === 'nestedComments' || sortField === 'likes') {
+            orderBy = {
+                [sortField]: { _count: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
         try {
             const comment = await prisma.comment.findMany({
                 where: {
                   postId,
                   parentId: null,
                 },
+                include: {
+                    _count: {
+                        select: {nestedComments: true, likes: true}
+                    }
+                },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });
@@ -132,8 +148,18 @@ module.exports = {
             throw new Error("Error deleting comment");
         }
     },
-    getNestedComments: async (id, page, limit) => {
+    getNestedComments: async (id, page, limit, sortField) => {
         const skip = (page - 1) * limit;
+        if (sortField === 'nestedComments' || sortField === 'likes') {
+            orderBy = {
+                [sortField]: { _count: sortOrder }
+            };
+        } 
+        else {
+            orderBy = {
+                [sortField]: sortOrder
+            };
+        };
         try {
             const comments = await prisma.comment.findMany({
                 where: {
@@ -147,6 +173,7 @@ module.exports = {
                         }
                     }
                 },
+                orderBy: orderBy,
                 skip,
                 take: limit,
             });

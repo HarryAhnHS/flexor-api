@@ -17,14 +17,9 @@ module.exports = {
     getAllPosts: async (page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         let orderBy = {};
-        if (sortField === 'comments') {
+        if (sortField === 'comments' || sortField === 'likes') {
             orderBy = {
-                _count: { comments: sortOrder }
-            };
-        } 
-        else if (sortField === 'likes') {
-            orderBy = {
-                _count: { likes: sortOrder }
+                [sortField]: { _count: sortOrder }
             };
         } 
         else {
@@ -57,14 +52,9 @@ module.exports = {
     getFeed: async (followingUserIds, joinedRealmIds, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         let orderBy = {};
-        if (sortField === 'comments') {
+        if (sortField === 'comments' || sortField === 'likes') {
             orderBy = {
-                _count: { comments: sortOrder }
-            };
-        } 
-        else if (sortField === 'likes') {
-            orderBy = {
-                _count: { likes: sortOrder }
+                [sortField]: { _count: sortOrder }
             };
         } 
         else {
@@ -104,14 +94,9 @@ module.exports = {
     getUserPosts: async (authorId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         let orderBy = {};
-        if (sortField === 'comments') {
+        if (sortField === 'comments' || sortField === 'likes') {
             orderBy = {
-                _count: { comments: sortOrder }
-            };
-        } 
-        else if (sortField === 'likes') {
-            orderBy = {
-                _count: { likes: sortOrder }
+                [sortField]: { _count: sortOrder }
             };
         } 
         else {
@@ -145,14 +130,9 @@ module.exports = {
     getUserDrafts: async (authorId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         let orderBy = {};
-        if (sortField === 'comments') {
+        if (sortField === 'comments' || sortField === 'likes') {
             orderBy = {
-                _count: { comments: sortOrder }
-            };
-        } 
-        else if (sortField === 'likes') {
-            orderBy = {
-                _count: { likes: sortOrder }
+                [sortField]: { _count: sortOrder }
             };
         } 
         else {
@@ -186,14 +166,9 @@ module.exports = {
     getUserLikedPosts: async (userId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         let orderBy = {};
-        if (sortField === 'comments') {
+        if (sortField === 'comments' || sortField === 'likes') {
             orderBy = {
-                _count: { comments: sortOrder }
-            };
-        } 
-        else if (sortField === 'likes') {
-            orderBy = {
-                _count: { likes: sortOrder }
+                [sortField]: { _count: sortOrder }
             };
         } 
         else {
@@ -231,14 +206,9 @@ module.exports = {
     getUserCommentedPosts: async (userId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         let orderBy = {};
-        if (sortField === 'comments') {
+        if (sortField === 'comments' || sortField === 'likes') {
             orderBy = {
-                _count: { comments: sortOrder }
-            };
-        } 
-        else if (sortField === 'likes') {
-            orderBy = {
-                _count: { likes: sortOrder }
+                [sortField]: { _count: sortOrder }
             };
         } 
         else {
@@ -291,14 +261,9 @@ module.exports = {
     getRealmPosts: async (realmId, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         let orderBy = {};
-        if (sortField === 'comments') {
+        if (sortField === 'comments' || sortField === 'likes') {
             orderBy = {
-                _count: { comments: sortOrder }
-            };
-        } 
-        else if (sortField === 'likes') {
-            orderBy = {
-                _count: { likes: sortOrder }
+                [sortField]: { _count: sortOrder }
             };
         } 
         else {
