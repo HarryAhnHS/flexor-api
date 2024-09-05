@@ -82,7 +82,7 @@ module.exports = {
     getNestedComments: async (req, res) => {
         const { id } = req.params;
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 5;
 
         try {
             const nestedComments = await commentsQueries.getNestedComments(id, page, limit);

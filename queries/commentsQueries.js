@@ -56,16 +56,6 @@ module.exports = {
                   postId,
                   parentId: null,
                 },
-                include: {
-                    user: true,
-                    post: true,
-                    _count: {
-                        select: {
-                            nestedComments: true,
-                            likes: true
-                        }
-                    }
-                },
                 skip,
                 take: limit,
             });
@@ -145,7 +135,7 @@ module.exports = {
     getNestedComments: async (id, page, limit) => {
         const skip = (page - 1) * limit;
         try {
-            const comment = await prisma.comment.findMany({
+            const comments = await prisma.comment.findMany({
                 where: {
                     parentId: id
                 },
@@ -160,7 +150,7 @@ module.exports = {
                 skip,
                 take: limit,
             });
-            return comment;
+            return comments;
         }
         catch(error) {
             console.error("Error getting nested comments", error);

@@ -38,7 +38,6 @@ module.exports = {
         }
     },
     getUserJoinedRealms: async (userId, page, limit) => {
-        const skip = (page - 1) * limit;
         try {
             const realms = await prisma.realm.findMany({
                 where: {
@@ -57,8 +56,7 @@ module.exports = {
                         }
                     }
                 },
-                skip,
-                take: limit,
+                ...(page && limit ? { skip: (page - 1) * limit, take: limit } : {}) // Apply pagination if page and limit are provided
             });
             return realms;
         }

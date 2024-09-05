@@ -138,7 +138,6 @@ module.exports = {
         }
     },
     getUserFollowers: async (id, page, limit) => {
-        const skip = (page - 1) * limit;
         try {
             const user = await prisma.user.findUnique({
                 where: { 
@@ -159,8 +158,7 @@ module.exports = {
                                 }
                             }
                         },
-                        skip,
-                        take: limit,
+                        ...(page && limit ? { skip: (page - 1) * limit, take: limit } : {}) // Apply pagination if page and limit are provided
                     }
                 },
             });
@@ -172,7 +170,6 @@ module.exports = {
         }
     },
     getUserFollowing: async (id, page, limit) => {
-        const skip = (page - 1) * limit;
         try {
             const user = await prisma.user.findUnique({
                 where: { 
@@ -193,18 +190,18 @@ module.exports = {
                                 }
                             }
                         },
-                        skip,
-                        take: limit,
+                        ...(page && limit ? { skip: (page - 1) * limit, take: limit } : {}) // Apply pagination if page and limit are provided
                     }
                 },
             });
-            return user.following.map(follow => follow.following);
+    
+            return user?.following.map(follow => follow.following) || [];
         }
-        catch(error) {
+        catch (error) {
             console.error("Error getting user's following", error);
             throw new Error("Error getting user's following");
         }
-    },
+    },    
     getUsersWhoLikedPost: async (postId, page, limit) => {
         const skip = (page - 1) * limit;
         try {
