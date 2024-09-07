@@ -13,6 +13,29 @@ const prisma = new PrismaClient({
     },
 });
 
+// Recursive query function
+const getFullNestedCommentsCount = async function getFullNestedCommentsCount(commentId) {
+    // Count the immediate nested comments
+    const directNestedCount = await prisma.comment.count({
+      where: { parentId: commentId },
+    });
+  
+    // Fetch all the direct nested comments' IDs
+    const directNestedComments = await prisma.comment.findMany({
+      where: { parentId: commentId },
+    });
+  
+    let totalCount = directNestedCount;
+  
+    // Recursively count nested comments for each direct nested comment
+    for (const nestedComment of directNestedComments) {
+      const childCount = await getFullNestedCommentsCount(nestedComment.id);
+      totalCount += childCount;
+    }
+  
+    return totalCount;
+};
+
 module.exports = {
     getAllComments: async () => {
         try {
@@ -148,7 +171,7 @@ module.exports = {
             throw new Error("Error deleting comment");
         }
     },
-    getNestedComments: async (id, page, limit, sortField) => {
+    getNestedComments: async (id, page, limit, sortField, sortOrder) => {
         const skip = (page - 1) * limit;
         if (sortField === 'nestedComments' || sortField === 'likes') {
             orderBy = {
@@ -228,6 +251,7 @@ module.exports = {
             console.error("Error adding nested comment", error);
             throw new Error("Error adding nested comment");
         }
-    }
+    },
+    getFullNestedCommentsCount
 
 }

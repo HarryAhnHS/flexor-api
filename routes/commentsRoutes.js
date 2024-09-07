@@ -25,6 +25,9 @@ router.get('/:id/nested', commentsControllers.getNestedComments);
 // Logged in user to add a nested comment by replying to a specific comment
 router.post('/:id/nested', commentsControllers.addNestedComment);
 
+// Get full recursive count for all nestedComments under a comment
+router.get('/:id/nested/count', commentsControllers.countFullNestedCommentTree);
+
 // Logged in user to like a comment
 router.post('/:id/like', commentsControllers.loggedUserLikeComment);
 

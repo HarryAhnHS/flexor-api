@@ -86,10 +86,26 @@ module.exports = {
         const sortField = req.query.sortField || 'createdAt';
         const sortOrder = req.query.sortOrder || 'desc';
 
+        console.log(req.query);
+
         try {
             const nestedComments = await commentsQueries.getNestedComments(id, page, limit, sortField, sortOrder);
             res.status(200).json({
                 nestedComments
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
+    },
+    countFullNestedCommentTree: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const count = await commentsQueries.getFullNestedCommentsCount(id);
+            res.status(200).json({
+                count
             })
         }
         catch(error) {
