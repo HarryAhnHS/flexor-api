@@ -8,7 +8,7 @@
     "migrate": "prisma migrate deploy",
     "dev": "NODE_ENV=development && node app.js",
     "test": "NODE_ENV=test && jest",
-    "deploy": "npm run migrate && prisma generate && npm start"
+    "release": "npm run migrate && prisma generate"
   },
   "author": "",
   "license": "ISC",
