@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -44,4 +45,18 @@ module.exports = {
             res.status(200).json({token})
         })
     },
+
+    demoLogInPost: async (req, res) => {
+        // Verify user login
+        const demoUsername = "demo";
+        const user  = await userQueries.existUser('username', demoUsername);
+        if (!user) return res.status(401).json({
+            message: 'Username not found'
+        });
+
+        // Create jwt token 
+        jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '24h'}, (err, token) => {
+            res.status(200).json({token})
+        })
+    }
 }
