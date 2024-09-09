@@ -45,54 +45,75 @@ module.exports = {
                   id
                 },
                 include: {
-                    followers: true
+                    followers: true,
+                    following: true,
                 },
             });
             // Extract user's followers
-            const userFollowersId = user.followers.map(follow => follow.followerId);
+            const userFollowersIds = user.followers.map(follow => follow.followingId);
+            const userFollowingIds = user.following.map(follow => follow.followingId);
 
             // Step 1: Find users with mutual followers
-            const mutualUsers = await prisma.user.findMany({
+            const suggestedUsers = await prisma.user.findMany({
                 where: {
-                AND: [
+                  AND: [
                     { id: { not: id } }, // Exclude the current user
+                    { 
+                      id: { 
+                        notIn: userFollowingIds // Exclude users that the current user is following
+                      }
+                    },
                     {
-                    followers: {
-                        some: {
-                        followerId: {
-                            in: userFollowersId
+                      OR: [
+                        {
+                          followers: {
+                            some: {
+                              followerId: {
+                                in: userFollowersIds
+                              }
+                            }
+                          }
                         },
-                        },
-                    },
-                    },
-                ],
+                        {
+                          followers: {
+                            some: {
+                              followerId: {
+                                in: userFollowingIds
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 orderBy: {
-                followers: { _count: 'desc' },
+                  followers: { _count: 'desc' }
                 },
-                take,
+                take
             });
         
             // Step 2: If no mutual users, get the most popular users
-            if (mutualUsers.length < 4) {
-                const mutualUserIds = mutualUsers.map(user => user.id);
+            if (suggestedUsers.length < 4) {
+                const suggestedUsersIds = suggestedUsers.map(user => user.id);
                 const popularUsers = await prisma.user.findMany({
                 where: {
                     AND: [
                         { id: { not: id } }, // Exclude the current user
-                        { id: { notIn: mutualUserIds } }, // Exclude already found mutual users
-                        ],
+                        { id: { notIn: suggestedUsersIds } }, // Exclude already found mutual users
+                        { id: { notIn: userFollowingIds } }, // Exclude already found mutual users
+                    ],
                 },
                 orderBy: {
                     followers: { _count: 'desc' }, // Sort by number of followers
                 },
-                take: take - mutualUsers.length,
+                take: take - suggestedUsers.length,
                 });
         
-                return [...mutualUsers, ...popularUsers];
+                return [...suggestedUsers, ...popularUsers];
             }
         
-            return mutualUsers;
+            return suggestedUsers;
         } 
         catch (error) {
             console.error('Could not get user suggested users:', error);
