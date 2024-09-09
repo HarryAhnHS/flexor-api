@@ -1,1 +1,1 @@
-web: npm run migrate && prisma generate && npm run build
+web: npm run deploy

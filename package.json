@@ -4,11 +4,11 @@
   "description": "Back-end blog API",
   "main": "app.js",
   "scripts": {
-    "build": "node app.js",
+    "start": "node app.js",
     "migrate": "prisma migrate deploy",
     "dev": "NODE_ENV=development && node app.js",
     "test": "NODE_ENV=test && jest",
-    "deploy": "npm run migrate && prisma generate && npm run build"
+    "deploy": "npm run migrate && prisma generate && npm start"
   },
   "author": "",
   "license": "ISC",
