@@ -5,11 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "migrate": "prisma migrate deploy",
+    "migrate": "npx prisma migrate deploy",
     "dev": "NODE_ENV=development && node app.js",
-    "test": "NODE_ENV=test && jest",
-    "release": "npm install && npm run migrate",
-    "postinstall": "prisma generate"
+    "test": "NODE_ENV=test && jest"
   },
   "author": "",
   "license": "ISC",
