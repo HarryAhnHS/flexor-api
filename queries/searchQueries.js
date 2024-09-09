@@ -17,34 +17,73 @@ module.exports = {
     getSearchResults: async (query, type, page, limit) => {
         const skip = (page - 1) * limit;
         try {
-            if (type === 'user') {
-                const users = await db.user.findMany({
+            if (type === 'users') {
+                const users = await prisma.user.findMany({
                     where: { username: { contains: query, mode: 'insensitive' } },
                     skip,
                     take: limit
                 });
                 return users;
             }
-            else if (type === 'realm') {
-                const realms = await db.realm.findMany({
+            else if (type === 'realms') {
+                const realms = await prisma.realm.findMany({
                     where: { name: { contains: query, mode: 'insensitive' } },
                     skip,
                     take: limit
                 });
                 return realms;
             }
-            else if (type === 'post') {
-                const posts = await db.post.findMany({
+            else if (type === 'posts') {
+                const posts = await prisma.post.findMany({
                     where: {
                         OR: [
                             { title: { contains: query, mode: 'insensitive' } },
-                            { content: { contains: query, mode: 'insensitive' } }
+                            { text: { contains: query, mode: 'insensitive' } }
                         ]
+                    },
+                    include: {
+                        images: true,
+                        author: true,
                     },
                     skip,
                     take: limit
                 });
                 return posts;
+            }
+            else if (type === 'all') {
+                // Fetch results from each type
+                const usersPromise = prisma.user.findMany({
+                    where: { username: { contains: query, mode: 'insensitive' } },
+                    take: limit
+                });
+                const realmsPromise = prisma.realm.findMany({
+                    where: { name: { contains: query, mode: 'insensitive' } },
+                    take: limit
+                });
+                const postsPromise = prisma.post.findMany({
+                    where: {
+                        OR: [
+                            { title: { contains: query, mode: 'insensitive' } },
+                            { text: { contains: query, mode: 'insensitive' } }
+                        ]
+                    },
+                    include: {
+                        images: true,
+                        author: true,
+                    },
+                    take: limit
+                });
+    
+                // Wait for all promises to resolve
+                const [users, realms, posts] = await Promise.all([usersPromise, realmsPromise, postsPromise]);
+    
+                // Combine results
+                const combinedResults = [...users, ...realms, ...posts];
+    
+                // Paginate the combined results
+                const paginatedResults = combinedResults.slice(skip, skip + limit);
+    
+                return paginatedResults;
             }
         }
         catch (error) {

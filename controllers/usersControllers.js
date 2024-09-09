@@ -32,7 +32,25 @@ module.exports = {
                 error: error.message
             })
         }
-        
+    },
+    getSuggested: async (req, res) => {
+        const { id } = req.params;
+        const take = parseInt(req.query.take) || 4;
+        console.log("Running with id and take", id, take);
+        try {
+            const users = await usersQueries.getSuggestedUsers(id, take);
+            const realms = await realmsQueries.getSuggestedRealms(id, take);
+            res.status(200).json({
+                users,
+                realms
+            })
+        }
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            })
+        }
+
     },
     getUserPosts: async (req, res) => {
         const { id } = req.params;

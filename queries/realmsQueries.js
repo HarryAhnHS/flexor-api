@@ -37,6 +37,62 @@ module.exports = {
             throw new Error("Error getting all realms");
         }
     },
+    getSuggestedRealms: async (id, take) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: { 
+                  id
+                },
+                include: {
+                    followers: true
+                },
+            });
+            // Extract user's followers
+            const userFollowersId = user.followers.map(follow => follow.followerId);
+
+            // Find realms with mutual members
+            const mutualRealms = await prisma.realm.findMany({
+                where: {
+                    joined: {
+                        some: {
+                            joinerId: {
+                                in: userFollowersId,
+                            },
+                        },
+                    },
+                },
+                orderBy: {
+                    joined: { _count: 'desc' }, // Sort by number of mutual members
+                    },
+                take,
+            });
+        
+            // If no mutual realms, get the most popular realms
+            if (mutualRealms.length < 4) {
+                const mutualRealmsIds = mutualRealms.map(user => user.id);
+                const popularRealms = await prisma.realm.findMany({
+                    where: {
+                            id: { 
+                                notIn: mutualRealmsIds 
+                            }, // Exclude already found mutual realms,
+                    },
+                    orderBy: [
+                        { joined: { _count: 'desc' } }, // Sort by number of members
+                        { posts: { _count: 'desc' } }, // Fallback sort by number of posts
+                    ],
+                    take: take - mutualRealms.length,
+                });
+        
+                return [...mutualRealms, ...popularRealms];
+            }
+        
+            return mutualRealms;
+        } 
+        catch (error) {
+            console.error('Could not get user suggested realms:', error);
+            throw new Error('Error getting user suggested realms');
+        }
+    },
     getUserJoinedRealms: async (userId, page, limit) => {
         try {
             const realms = await prisma.realm.findMany({

@@ -38,6 +38,67 @@ module.exports = {
             throw new Error('Error finding user');
         }
     },
+    getSuggestedUsers: async (id, take) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: { 
+                  id
+                },
+                include: {
+                    followers: true
+                },
+            });
+            // Extract user's followers
+            const userFollowersId = user.followers.map(follow => follow.followerId);
+
+            // Step 1: Find users with mutual followers
+            const mutualUsers = await prisma.user.findMany({
+                where: {
+                AND: [
+                    { id: { not: id } }, // Exclude the current user
+                    {
+                    followers: {
+                        some: {
+                        followerId: {
+                            in: userFollowersId
+                        },
+                        },
+                    },
+                    },
+                ],
+                },
+                orderBy: {
+                followers: { _count: 'desc' },
+                },
+                take,
+            });
+        
+            // Step 2: If no mutual users, get the most popular users
+            if (mutualUsers.length < 4) {
+                const mutualUserIds = mutualUsers.map(user => user.id);
+                const popularUsers = await prisma.user.findMany({
+                where: {
+                    AND: [
+                        { id: { not: id } }, // Exclude the current user
+                        { id: { notIn: mutualUserIds } }, // Exclude already found mutual users
+                        ],
+                },
+                orderBy: {
+                    followers: { _count: 'desc' }, // Sort by number of followers
+                },
+                take: take - mutualUsers.length,
+                });
+        
+                return [...mutualUsers, ...popularUsers];
+            }
+        
+            return mutualUsers;
+        } 
+        catch (error) {
+            console.error('Could not get user suggested users:', error);
+            throw new Error('Error getting user suggested users');
+        }
+    },
     getUser: async (colName, query) => {
         try {
             const whereClause = { [colName]: query };

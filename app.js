@@ -18,6 +18,7 @@ const commentsRoutes = require("./routes/commentsRoutes");
 const realmsRoutes = require("./routes/realmsRoutes");
 const imagesRoutes = require("./routes/imagesRoutes");
 const notificationRoutes = require('./routes/notificationsRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 
 // Initialize express
 const app = express();
@@ -52,6 +53,8 @@ passportConfig(passport);
 app.use((req, res, next) => {
     console.log('Request Header:', req.header); // Log request body to debug
     console.log('Request Body:', req.body); // Log request body to debug
+    console.log('Request Query:', req.query); // Log request body to debug
+    console.log('Authorization header:', req.headers.authorization);
     next();
 });
 
@@ -65,6 +68,7 @@ app.use('/comments', passport.authenticate('jwt', { session: false }), commentsR
 app.use('/realms', passport.authenticate('jwt', { session: false }), realmsRoutes);
 app.use('/images', passport.authenticate('jwt', { session: false }), imagesRoutes);
 app.use('/notifications', passport.authenticate('jwt', { session: false }), notificationRoutes);
+app.use('/search', passport.authenticate('jwt', { session: false }), searchRoutes);
 
 
 

@@ -1,4 +1,3 @@
-const upload = require('../utils/configs/multer-config');
 const isAuthorized = require('../utils/middlewares/isAuthorized');
 
 const express = require('express');
@@ -11,6 +10,9 @@ router.get('/', usersControllers.getAllUsers);
 
 // Get a specific metadetails for user - num published posts, num posts liked, num posts commented, num followers, num following
 router.get('/:id', usersControllers.getUser);
+
+// Get user suggested users + realms 
+router.get('/:id/suggest', usersControllers.getSuggested);
 
 // Get a specific user posts including num likes + (root comments including count of nested comment)
 router.get('/:id/posts', usersControllers.getUserPosts);
