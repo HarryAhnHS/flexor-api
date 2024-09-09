@@ -29,7 +29,7 @@ socketSetup(server);
 // Frontend URL
 const FRONTEND_URL =
   process.env.NODE_ENV === 'production'
-    ? 'NEEDTOCHANGE'
+    ? process.env.FRONTEND_URL
     : 'http://localhost:5173';
 
 // Configure CORS
