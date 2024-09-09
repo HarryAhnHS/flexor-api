@@ -31,7 +31,6 @@ const FRONTEND_URL =
   process.env.NODE_ENV === 'production'
     ? process.env.FRONTEND_URL
     : 'http://localhost:5173';
-
 // Configure CORS
 app.use(cors({
     origin: FRONTEND_URL, // Allow requests from this origin
