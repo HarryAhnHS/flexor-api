@@ -21,5 +21,5 @@ module.exports = (passport) => {
         }
     }));
 
-    // Google stuff here coming soon
+    // Google stuff here coming laters
 };

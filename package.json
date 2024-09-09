@@ -4,6 +4,7 @@
   "description": "Back-end blog API",
   "main": "app.js",
   "scripts": {
+    "build": "node app.js",
     "dev": "NODE_ENV=development && node app.js",
     "test": "NODE_ENV=test && jest"
   },

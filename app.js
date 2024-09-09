@@ -6,7 +6,6 @@ const passport = require('passport');
 const express = require("express");
 const cors = require("cors");
 
-const sessionMiddleware = require("./utils/configs/session-config");
 const passportConfig = require("./utils/configs/passport-config");
 const socketSetup = require("./utils/middlewares/socket");
 
@@ -41,10 +40,6 @@ app.use(cors({
 
 app.use(express.json()); // For JSON payloads
 app.use(express.urlencoded({ extended: true })); // For application/x-www-form-urlencoded form-data
-
-// Express Session + Passport for OAuth
-// app.use(sessionMiddleware);
-// app.use(passport.session());
 
 // Initialize Passport configuration
 passportConfig(passport);
