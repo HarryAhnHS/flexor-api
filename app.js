@@ -65,8 +65,6 @@ app.use('/images', passport.authenticate('jwt', { session: false }), imagesRoute
 app.use('/notifications', passport.authenticate('jwt', { session: false }), notificationRoutes);
 app.use('/search', passport.authenticate('jwt', { session: false }), searchRoutes);
 
-
-
 // Global error handler
 app.use((err, req, res, next) => {
     console.error(err.stack); // Log the error stack to the console
