@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build": "npm start && npm migrate && prisma generate",
+    "build": "npm migrate && prisma generate",
     "migrate": "npx prisma migrate deploy",
     "dev": "NODE_ENV=development && node app.js",
     "test": "NODE_ENV=test && jest"
