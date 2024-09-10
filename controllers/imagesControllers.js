@@ -11,8 +11,11 @@ module.exports = {
         const id = req.body.id;
         try {
             const result = await cloudinary.uploader.upload(image.path, {
-            resource_type: 'auto',
+                resource_type: 'auto',
             });
+
+            console.log(image);
+            console.log(result);
 
             imageData = ({
                 id,
@@ -28,6 +31,29 @@ module.exports = {
             });
             // Remove local file after upload
             fs.unlinkSync(image.path);
+        }   
+        catch(error) {
+            res.status(500).json({
+                error: error.message
+            });
+        }
+    },
+    uploadExistingImage: async (req, res) => {
+        const ownerId = req.user.id;
+        const url = req.body.url;
+        const id = req.body.id;
+        try {
+            imageData = ({
+                id,
+                ownerId,
+                url
+            });
+            
+            const uploadedImage = await imagesQueries.uploadImage(imageData);
+            res.status(201).json({
+                message: "Successfully uploaded images",
+                image: uploadedImage
+            });
         }   
         catch(error) {
             res.status(500).json({

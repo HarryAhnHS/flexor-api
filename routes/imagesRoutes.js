@@ -7,7 +7,10 @@ const isAuthorized = require('../utils/middlewares/isAuthorized');
 // Logged user to upload post images + generate imageId (uuid) from front-end
 router.post('/', upload.single('image'), imagesControllers.uploadPostImage);
 
-// User to delete post images - take query array of id + publicId to delete from cloud + db
+// Logged user to link existing images + generate imageId (uuid) from front-end
+router.post('/existing', imagesControllers.uploadExistingImage);
+
+// User to delete post images - take query array of publicId to delete from cloud + db
 router.delete('/', imagesControllers.deletePostImages);
 
 // Logged user to upload + update profile photo url and public id for themselves

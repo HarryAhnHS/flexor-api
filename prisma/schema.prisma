@@ -110,7 +110,7 @@ model Post {
 model Image {
   id             String      @id @default(uuid())
   url            String
-  publicId       String
+  publicId       String?
   owner          User?        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId        String?
   post           Post?       @relation(fields: [postId], references: [id], onDelete: Cascade)
