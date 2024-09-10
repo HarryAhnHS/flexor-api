@@ -41,6 +41,11 @@ app.use(cors({
 
   console.log("using frontendurl:", FRONTEND_URL);
 
+app.use((req,res,next) => {
+  res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL);
+  next();
+});
+
 app.use(express.json()); // For JSON payloads
 app.use(express.urlencoded({ extended: true })); // For application/x-www-form-urlencoded form-data
 
