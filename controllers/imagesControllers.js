@@ -9,12 +9,12 @@ module.exports = {
         const ownerId = req.user.id;
         const image = req.file;
         const id = req.body.id;
+        console.log("Uploading image with", req.body, req.file);
         try {
             const result = await cloudinary.uploader.upload(image.path, {
                 resource_type: 'auto',
             });
 
-            console.log(image);
             console.log(result);
 
             imageData = ({
@@ -42,6 +42,7 @@ module.exports = {
         const ownerId = req.user.id;
         const url = req.body.url;
         const id = req.body.id;
+        console.log("Uploading gif with", req.body);
         try {
             imageData = ({
                 id,
@@ -62,7 +63,8 @@ module.exports = {
         }
     },
     deletePostImages: async (req, res) => {
-        const { deleteIds, deletePublicIds } = req.query;
+        const deleteIds  = req.query.deleteIds;
+        const deletePublicIds = req.query.deletePublicIds || null;
 
         // Convert comma-separated query parameters to arrays
         const idsArray = deleteIds.split(',');

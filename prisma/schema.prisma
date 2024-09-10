@@ -92,8 +92,8 @@ model Post {
   updatedAt      DateTime    @updatedAt
   published      Boolean
 
-  realm          Realm       @relation(fields: [realmId], references: [id], onDelete: Cascade)
-  realmId        String
+  realm          Realm?       @relation(fields: [realmId], references: [id], onDelete: Cascade)
+  realmId        String?
 
   title          String?
   text           String?
