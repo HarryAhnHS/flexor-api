@@ -86,8 +86,6 @@ module.exports = {
         const sortField = req.query.sortField || 'createdAt';
         const sortOrder = req.query.sortOrder || 'desc';
 
-        console.log(req.query);
-
         try {
             const nestedComments = await commentsQueries.getNestedComments(id, page, limit, sortField, sortOrder);
             res.status(200).json({

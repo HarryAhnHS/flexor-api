@@ -87,6 +87,21 @@ module.exports = {
                     }
                   ]
                 },
+                include: {
+                    _count: {
+                        select: {
+                            posts: {
+                                where: {
+                                    published: true
+                                }
+                            },
+                            likes: true,
+                            comments: true,
+                            followers: true,
+                            following: true
+                        }
+                    }
+                },
                 orderBy: {
                   followers: { _count: 'desc' }
                 },
@@ -103,6 +118,21 @@ module.exports = {
                         { id: { notIn: suggestedUsersIds } }, // Exclude already found mutual users
                         { id: { notIn: userFollowingIds } }, // Exclude already found mutual users
                     ],
+                },
+                include: {
+                    _count: {
+                        select: {
+                            posts: {
+                                where: {
+                                    published: true
+                                }
+                            },
+                            likes: true,
+                            comments: true,
+                            followers: true,
+                            following: true
+                        }
+                    }
                 },
                 orderBy: {
                     followers: { _count: 'desc' }, // Sort by number of followers
@@ -232,12 +262,18 @@ module.exports = {
                                 include: {
                                     _count: {
                                         select: {
-                                            posts: true,
+                                            posts: {
+                                                where: {
+                                                    published: true
+                                                }
+                                            },
+                                            likes: true,
+                                            comments: true,
                                             followers: true,
-                                            following: true,
+                                            following: true
                                         }
                                     }
-                                }
+                                },
                             }
                         },
                         ...(page && limit ? { skip: (page - 1) * limit, take: limit } : {}) // Apply pagination if page and limit are provided
@@ -264,12 +300,18 @@ module.exports = {
                                 include: {
                                     _count: {
                                         select: {
-                                            posts: true,
+                                            posts: {
+                                                where: {
+                                                    published: true
+                                                }
+                                            },
+                                            likes: true,
+                                            comments: true,
                                             followers: true,
-                                            following: true,
+                                            following: true
                                         }
                                     }
-                                }
+                                },
                             }
                         },
                         ...(page && limit ? { skip: (page - 1) * limit, take: limit } : {}) // Apply pagination if page and limit are provided
@@ -298,9 +340,15 @@ module.exports = {
                 include: {
                     _count: {
                         select: {
-                            posts: true,
+                            posts: {
+                                where: {
+                                    published: true
+                                }
+                            },
+                            likes: true,
+                            comments: true,
                             followers: true,
-                            following: true,
+                            following: true
                         }
                     }
                 },
@@ -328,9 +376,15 @@ module.exports = {
                 include: {
                     _count: {
                         select: {
-                            posts: true,
+                            posts: {
+                                where: {
+                                    published: true
+                                }
+                            },
+                            likes: true,
+                            comments: true,
                             followers: true,
-                            following: true,
+                            following: true
                         }
                     }
                 },
@@ -358,9 +412,15 @@ module.exports = {
                 include: {
                     _count: {
                         select: {
-                            posts: true,
+                            posts: {
+                                where: {
+                                    published: true
+                                }
+                            },
+                            likes: true,
+                            comments: true,
                             followers: true,
-                            following: true,
+                            following: true
                         }
                     }
                 },

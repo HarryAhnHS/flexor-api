@@ -90,8 +90,13 @@ module.exports = {
                   parentId: null,
                 },
                 include: {
+                    user: true,
+                    nestedComments: true,
                     _count: {
-                        select: {nestedComments: true, likes: true}
+                        select: {
+                            likes: true,
+                            nestedComments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
@@ -122,7 +127,7 @@ module.exports = {
                             likes: true
                         }
                     }
-                }
+                },
             });
             return comment;
         }
@@ -142,13 +147,14 @@ module.exports = {
                 },
                 include: {
                     user: true,
+                    nestedComments: true,
                     _count: {
                         select: {
+                            likes: true,
                             nestedComments: true,
-                            likes: true
                         }
                     }
-                }
+                },
             });
             return comment;
         }
@@ -190,9 +196,11 @@ module.exports = {
                 },
                 include: {
                     user: true,
+                    nestedComments: true,
                     _count: {
                         select: {
-                            likes: true
+                            likes: true,
+                            nestedComments: true,
                         }
                     }
                 },

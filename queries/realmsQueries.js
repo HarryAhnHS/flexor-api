@@ -77,6 +77,15 @@ module.exports = {
                 notIn: joinedRealmIds, // Exclude realms the user has already joined
               },
             },
+            include: {
+                creator: true,
+                _count: {
+                    select: {
+                        posts: true,
+                        joined: true,
+                    }
+                }
+            },
             orderBy: {
               joined: { _count: 'desc' }, // Sort by number of mutual members
             },
@@ -92,6 +101,15 @@ module.exports = {
                   notIn: [...mutualRealmIds, ...joinedRealmIds], // Exclude already found mutual realms and joined realms
                 },
               },
+              include: {
+                creator: true,
+                _count: {
+                    select: {
+                        posts: true,
+                        joined: true,
+                    }
+                }
+            },
               orderBy: [
                 { joined: { _count: 'desc' } }, // Sort by number of members
                 { posts: { _count: 'desc' } }, // Fallback sort by number of posts

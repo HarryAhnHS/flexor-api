@@ -34,8 +34,14 @@ module.exports = {
                     published: true
                 },
                 include: {
+                    realm: true,
+                    images: true,
+                    author: true,
                     _count: {
-                        select: { comments: true, likes: true }
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
@@ -75,8 +81,14 @@ module.exports = {
                 },
                 distinct: ['id'], // Ensures no duplicate posts
                 include: {
+                    realm: true,
+                    images: true,
+                    author: true,
                     _count: {
-                        select: { comments: true, likes: true }
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
@@ -112,8 +124,14 @@ module.exports = {
                     published: true
                 },
                 include: {
+                    realm: true,
+                    images: true,
+                    author: true,
                     _count: {
-                        select: { comments: true, likes: true }
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
@@ -148,8 +166,14 @@ module.exports = {
                     published: false
                 },
                 include: {
+                    realm: true,
+                    images: true,
+                    author: true,
                     _count: {
-                        select: { comments: true, likes: true }
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
@@ -188,8 +212,14 @@ module.exports = {
                     }
                 },
                 include: {
+                    realm: true,
+                    images: true,
+                    author: true,
                     _count: {
-                        select: { comments: true, likes: true }
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
@@ -243,8 +273,14 @@ module.exports = {
                     ],
                 },
                 include: {
+                    realm: true,
+                    images: true,
+                    author: true,
                     _count: {
-                        select: { comments: true, likes: true }
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
@@ -279,8 +315,14 @@ module.exports = {
                     published: true
                 },
                 include: {
+                    realm: true,
+                    images: true,
+                    author: true,
                     _count: {
-                        select: { comments: true, likes: true }
+                        select: {
+                            likes: true,
+                            comments: true,
+                        }
                     }
                 },
                 orderBy: orderBy,
