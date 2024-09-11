@@ -1,3 +1,4 @@
+const { validationResult } = require("express-validator");
 const usersQueries = require('../queries/usersQueries');
 const followsQueries = require('../queries/followsQueries');
 const postsQueries = require('../queries/postsQueries');
@@ -193,6 +194,12 @@ module.exports = {
         }
     },
     updateUser: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            })
+        }
         const { id } = req.params;
         const { username, bio } = req.body;
         try {

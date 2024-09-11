@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const usersControllers = require("../controllers/usersControllers");
 
+const { validateUserUpdate } = require("../utils/middlewares/validators");
+
 
 // List all users
 router.get('/', usersControllers.getAllUsers);
@@ -39,7 +41,7 @@ router.get('/:id/joined', usersControllers.getUserJoinedRealms);
 router.get('/:id/created', isAuthorized("user"), usersControllers.getUserCreatedRealms);
 
 // Update a user
-router.put('/:id', isAuthorized("user"), usersControllers.updateUser);
+router.put('/:id', isAuthorized("user"), [validateUserUpdate, usersControllers.updateUser]);
 
 // Delete a user
 router.delete('/:id', isAuthorized("user"), usersControllers.deleteUser);

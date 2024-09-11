@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 const userQueries = require('../../queries/usersQueries');
 
 // Validation middleware for the sign-up form
-const validateSignUp = [
+const validateUser = [
     // Validate email
     body('email')
         .trim()
@@ -21,17 +21,17 @@ const validateSignUp = [
     body('username')
         .trim()
         .notEmpty().withMessage('Username is required')
-        .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')
-        .isAlphanumeric().withMessage('Username must contain only letters and numbers')
+        .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters long')
+        .matches(/^[\w.]+$/).withMessage('Username can only contain letters, numbers, underscores, and periods, and must not have any spaces')
         .custom(async value => {
-            const user =  await userQueries.existUser("username", value);
+            const user = await userQueries.existUser("username", value);
             if (user) {
-                throw new Error('Username already in use');
-            }
-            else {
-                return true;
+            throw new Error('Username already in use');
+            } else {
+            return true;
             }
         }),
+
 
     // Validate password
     body('password')
@@ -51,4 +51,13 @@ const validateSignUp = [
         })
 ];
 
-module.exports = { validateSignUp };
+const validateUserUpdate = [
+    // Validate username
+    body('username')
+        .trim()
+        .notEmpty().withMessage('Username is required')
+        .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters long')
+        .matches(/^[\w.]+$/).withMessage('Username can only contain letters, numbers, underscores, and periods, and must not have any spaces')
+]
+
+module.exports = { validateUser, validateUserUpdate };

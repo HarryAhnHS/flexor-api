@@ -19,7 +19,12 @@ module.exports = {
         try {
             if (type === 'users') {
                 const users = await prisma.user.findMany({
-                    where: { username: { contains: query, mode: 'insensitive' } },
+                    where: { 
+                        OR: [
+                            { username: { contains: query, mode: 'insensitive' }  },
+                            { bio: { contains: query, mode: 'insensitive' } }
+                        ]
+                    },
                     skip,
                     take: limit
                 });
@@ -27,7 +32,12 @@ module.exports = {
             }
             else if (type === 'realms') {
                 const realms = await prisma.realm.findMany({
-                    where: { name: { contains: query, mode: 'insensitive' } },
+                    where: { 
+                        OR: [
+                            { name: { contains: query, mode: 'insensitive' }  },
+                            { description: { contains: query, mode: 'insensitive' } }
+                        ]
+                    },
                     skip,
                     take: limit
                 });
@@ -53,11 +63,22 @@ module.exports = {
             else if (type === 'all') {
                 // Fetch results from each type
                 const usersPromise = prisma.user.findMany({
-                    where: { username: { contains: query, mode: 'insensitive' } },
+                    where: { 
+                        OR: [
+                            { username: { contains: query, mode: 'insensitive' }  },
+                            { bio: { contains: query, mode: 'insensitive' } }
+                        ]
+                    },
                     take: limit
                 });
                 const realmsPromise = prisma.realm.findMany({
-                    where: { name: { contains: query, mode: 'insensitive' } },
+                    where: { 
+                        OR: [
+                            { name: { contains: query, mode: 'insensitive' }  },
+                            { description: { contains: query, mode: 'insensitive' } }
+                        ]
+                        
+                    },
                     take: limit
                 });
                 const postsPromise = prisma.post.findMany({
