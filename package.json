@@ -8,9 +8,7 @@
     "migrate": "npx prisma migrate deploy",
     "dev": "NODE_ENV=development && node app.js",
     "test": "NODE_ENV=test && jest",
-    "postinstall": "npx prisma migrate deploy && prisma generate",
-
-    "deploy": "npm postinstall && node app.js"
+    "postinstall": "npx prisma migrate deploy && prisma generate"
   },
   "author": "",
   "license": "ISC",
