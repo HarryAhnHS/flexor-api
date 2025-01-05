@@ -61,22 +61,12 @@ The server will be available at `http://localhost:<PORT>` (default: `http://loca
 
 ### 5. Run Database Migrations
 
-To ensure your database schema is up-to-date, run:
+This project uses Prisma ORM. To ensure your database schema is up-to-date, run:
 
 ```bash
 npm run migrate
 # or
 yarn migrate
-```
-
-### 6. Run Tests (Optional)
-
-Run the test suite to verify functionality:
-
-```bash
-npm test
-# or
-yarn test
 ```
 
 ## API Endpoints
